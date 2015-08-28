@@ -1,0 +1,31 @@
+{% extends "j_app/shared/base.html" %}
+{% load compress %}
+{% load static from staticfiles }
+
+{% block custom_less %}
+  {% compress css %}
+  {{ block.super }}
+  <!-- INSERT LINKS HERE -->
+  <link type="text/less" rel="stylesheet" href="{{STATIC_URL}}j_app/landing_page/less/base.less"/>
+  <!--           -->
+  {% endcompress %}
+{% endblock %}
+
+{% block main_content %}
+<div class="panel panel-1">
+  <div class="container">
+    <h1 class="header-text">Write Your Feelings</h1>
+    <div class="col-xs-12 sample-text-input" data-ph="Drag and drop images from your folders or type out your feelings!"></div>
+    <button class="col-xs-12 btn-default btn save-sample-text">SAVE</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+  {% compress js %}
+  {{ block.super }}
+  <!-- INSERT SCRIPTS HERE -->
+  <script src="{{STATIC_URL}}j_app/landing_page/js/base.js"></script>
+  <!--           -->
+  {% endcompress %}
+{% endblock %}

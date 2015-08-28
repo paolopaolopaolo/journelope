@@ -1,0 +1,21 @@
+{% load static from staticfiles %}
+
+<div class="header-ctr container-fluid">
+  <div class="header row">
+    <div class="logo-ctr col-xs-6 col-sm-3" href="/">
+      <div class="logo-crop">
+        <img src="{% static 'j_app/shared/img/ben_sprites.svg' %}">
+      </div>
+      <span class="logo-text">
+        <span class="journ">Journ</span><span class="elope">elope</span>
+      </span>
+    </div>
+    {% if isAuth %}
+      {{ current_user }}
+    {% else %}
+    <span class="sign-up-log-in">
+      <a href="/uauth">Sign Up</a>&emsp;|&emsp;<a href="/uauth">Log In</a>
+    </span>
+    {% endif %}
+  </div>
+</div>

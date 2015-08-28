@@ -1,0 +1,61 @@
+{% load compress %}
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Journelope: Write Your Feelings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!-- CSS/LESS LINKS -->
+    <!--    **-Titillium Web Font -->
+    <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,600italic,600,400italic,200,200italic' rel='stylesheet' type='text/css'>
+    <!--    **-Bootstrap CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    {% compress css %}
+      <link href="{% static 'j_app/shared/less/base.less' %}" type="text/less" rel="stylesheet">
+      {% block custom_less %}
+      {% endblock %}
+    {% endcompress %}
+  </head>
+  <body>
+    <div class="body-wrapper">
+      <!-- HEADER -->
+      {% include "j_app/shared/header.html" with isAuth=showsAuthenticatedHeader user=current_user%}
+
+      <!-- MAIN CONTENT -->
+      {% block main_content %}
+      {% endblock %}
+
+      <!-- FOOTER -->
+      {% if showsFooter %}
+        {% include "j_app/shared/footer.html" %}
+      {% endif %}
+    </div>
+    <!-- JS Scripts -->
+
+    <!--    **-jquery -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+    <!--    **-jquery-ui -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <!--    **-bootstrap -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <!--    **-underscore.js & backbone.js -->
+    {% if hasBackbone %}
+      <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.map"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.2/backbone-min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.2/backbone-min.map"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.2/backbone.js"></script>
+    {% endif %}
+
+    <!--    **-custom javascript -->
+    {% compress js %}
+      {% block custom_js  %}
+      {% endblock %}
+      <script src="{% static 'j_app/shared/js/imt/img-txt-hybrid.min.js' %}"></script>
+      <script src="{% static 'j_app/shared/js/base.js' %}"></script>
+    {% endcompress %}
+  </body>
+</html>

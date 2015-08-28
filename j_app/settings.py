@@ -10,21 +10,67 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+try:
+    from j_app.local_settings import *
+except ImportError:
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+    ALLOWED_HOSTS = []
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+LOGIN_URL = "/"
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, "templates"),)
+
+STATICFILES_DIRS = (
+    os.path.abspath(os.path.join(BASE_DIR, 'static')), 
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
+if DEBUG:
+    with open(os.path.join(BASE_DIR, 'SECRET_KEY.txt'), 'rb') as secret_key:
+        SECRET_KEY = secret_key.read()
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8+ri(=_ek0v%1sr_o0!rt-h-iz)8rt5)!!)f&%++9&%^@s7uy#'
+    # Database
+    # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+    
+else:
+    SECRET_KEY = os.environ['JAPP_SK']
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+    # Database
+    # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
-TEMPLATE_DEBUG = True
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-ALLOWED_HOSTS = []
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = False
+COMPRESS_PRECOMPILERS = (
+    ('text/less', 'lessc {infile} {outfile}'),
+)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_root")
 
 
 # Application definition
@@ -36,6 +82,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'compressor',
+    'journalapp'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -53,16 +101,6 @@ ROOT_URLCONF = 'j_app.urls'
 WSGI_APPLICATION = 'j_app.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
@@ -77,7 +115,4 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'

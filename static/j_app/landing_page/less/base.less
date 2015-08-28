@@ -1,0 +1,38 @@
+.panel {
+	width: 100%;
+}
+
+.panel-1 {
+	background-image: url('../img/bookshelf_background.png');
+}
+
+.header-text {
+	font-weight: 600;
+	text-align: center;
+	text-shadow: 1px 1px #555;
+	color: #fff;
+}
+
+.sample-text-input {
+	min-height: 350px;
+	border-radius: 10px;
+	margin: 20px 0;
+	font-size: 20px;
+	font-weight: 200;
+	background-color: #fff;
+	padding: 20px 15px;
+	&:empty:not(:focus):before {
+		content: attr(data-ph);	
+		color: grey;
+		font-size: 18px;	
+	}
+}
+
+.save-sample-text {
+	background-color: #77e5ff;
+	border: none;
+	text-align: center;
+	margin-bottom: 20px;
+	font-size: 20px;
+	font-weight: 600;
+}

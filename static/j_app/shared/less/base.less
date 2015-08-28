@@ -1,0 +1,71 @@
+html {
+  height: 100%;
+  body {
+    height: 100%;
+    .body-wrapper {
+      font-family: 'Titillium Web', sans-serif;
+      margin: 0;
+      padding: 0 0 75px 0;
+      height: 100%;
+      background-color: #fafafa;
+      .header {
+        background-color: #fff;
+        border-bottom: #ccc;
+        padding: 10px 15px;
+        font-size: 25px;
+        .logo-ctr {
+          cursor: pointer;  
+          .logo-crop {
+            width: 45px;
+            overflow: hidden;
+            position: relative;
+            display: inline-block;
+            height: 35px;
+            vertical-align: top;
+            img {
+              position: absolute;
+              height: 35px;
+              right: 4px;
+            }
+          }
+          &:hover {
+            .logo-text {
+              .journ {
+                color: #45b3e7;
+              }
+              .elope {
+                color: #e7d748;
+              }
+            }
+            img {
+              right: initial;
+            }
+          }
+        }
+        .sign-up-log-in {
+          float: right;
+        }
+      }
+
+      .footer-ctr {
+        background-color: #fff;
+        width: 100%;
+        .footer {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+// ImgTxtHybrid Styling
+.upload-image {
+  .delImg {
+    border: none;
+    background-color: transparent;
+    font-weight: 600;
+    color: #ff0000;
+    text-shadow: 2px 2px #555;
+  } 
+}
