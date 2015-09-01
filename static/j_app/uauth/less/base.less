@@ -1,0 +1,41 @@
+.forms-ctr {
+	width: 100%;
+	.auth-form {
+		margin: 20px auto;
+		box-shadow: 0 0 6px #ddd; 
+		background-color: #fff;
+		padding: 15px;
+
+		.field-row, p{
+			margin: 15px 0;
+			span {
+				font-size: 18px;
+			}
+			.field-label {
+				background-color: transparent;
+			}
+			.field-input {
+				input {
+					background-color: transparent;
+					width: 100%;
+					border: none;
+					padding: 5px;
+				}
+				background-color: #f9f9f9;
+			}
+			.field-error {
+				color: #ff0000;
+			}
+		}
+
+		.auth-button {
+			background-color: #77e5ff;
+		}
+
+		&:nth-child(even) {
+			@media (min-width: 767px) {
+				margin-left: 20px;
+			}
+		}
+	}
+}

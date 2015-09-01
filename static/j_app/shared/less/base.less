@@ -1,12 +1,23 @@
+// Mixins and defaults
+.collapsed {
+  height: 0px !important;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
 html {
   height: 100%;
   body {
+    position: relative;
     height: 100%;
     .body-wrapper {
+      min-height: 100%;
+      position: relative;
       font-family: 'Titillium Web', sans-serif;
       margin: 0;
       padding: 0 0 75px 0;
-      height: 100%;
       background-color: #fafafa;
       .header {
         background-color: #fff;
@@ -42,14 +53,35 @@ html {
             }
           }
         }
-        .sign-up-log-in {
+        .right-menu {
+          cursor: pointer;
+          position: relative;
           float: right;
+          font-size: 20px;
+          overflow: hidden;
         }
       }
-
+      .header-menu {
+        float: right;
+        margin-right: 15px;
+        list-style-type: none;
+        padding: 0;
+        background-color: #fff;
+        overflow: hidden;
+        box-shadow: 0 0 5px #ddd;
+        li {
+          cursor: pointer;
+          margin: 15px 10px;
+          &:hover {
+            background-color: #fafafa;
+          }
+        }
+      }
       .footer-ctr {
         background-color: #fff;
         width: 100%;
+        position: absolute;
+        bottom: 0;
         .footer {
           width: 100%;
           text-align: center;
@@ -61,6 +93,10 @@ html {
 
 // ImgTxtHybrid Styling
 .upload-image {
+  cursor: move;
+  &:active {
+    box-shadow: 0 0 9px 1px #444;
+  }
   .delImg {
     border: none;
     background-color: transparent;

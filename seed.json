@@ -1,0 +1,212 @@
+[
+{
+  "fields": {
+    "username": "dpaolomercado@gmail.com",
+    "first_name": "",
+    "last_name": "",
+    "is_active": true,
+    "is_superuser": true,
+    "is_staff": true,
+    "last_login": "2015-09-02T20:27:52.418Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$12000$jQqb8NOxBedB$aJkVQmLdtkRzDwtIqw1S1/L2YOCca7fXda5ZqDBGutk=",
+    "email": "dpaolomercado@gmail.com",
+    "date_joined": "2015-08-28T19:58:35.591Z"
+  },
+  "model": "auth.user",
+  "pk": 1
+},
+{
+  "fields": {
+    "username": "a.bedelia@gmail.com",
+    "first_name": "Amelia",
+    "last_name": "Bedelia",
+    "is_active": true,
+    "is_superuser": false,
+    "is_staff": false,
+    "last_login": "2015-09-01T23:10:44.303Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$12000$tkssXLCpTP5g$XTzrPmKc74QcyEMWWndpvLUWXeQrj+AsBzFpT2zQdIg=",
+    "email": "a.bedelia@gmail.com",
+    "date_joined": "2015-09-01T21:40:04.650Z"
+  },
+  "model": "auth.user",
+  "pk": 2
+},
+{
+  "fields": {
+    "username": "gherman@gmail.com",
+    "first_name": "Germain",
+    "last_name": "Herman",
+    "is_active": true,
+    "is_superuser": false,
+    "is_staff": false,
+    "last_login": "2015-09-01T23:06:52.593Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$12000$83kWzpC83dzk$vRSqv8QJQQr6P3FATe5Dpr5CLZE6cDotnuNyZJ7lvkA=",
+    "email": "gherman@gmail.com",
+    "date_joined": "2015-09-01T23:06:51.825Z"
+  },
+  "model": "auth.user",
+  "pk": 3
+},
+{
+  "fields": {
+    "user": [
+      "a.bedelia@gmail.com"
+    ]
+  },
+  "model": "journalapp.j_user",
+  "pk": 1
+},
+{
+  "fields": {
+    "user": [
+      "dpaolomercado@gmail.com"
+    ]
+  },
+  "model": "journalapp.j_user",
+  "pk": 2
+},
+{
+  "fields": {
+    "user": [
+      "gherman@gmail.com"
+    ]
+  },
+  "model": "journalapp.j_user",
+  "pk": 3
+},
+{
+  "fields": {
+    "date": "2015-09-02T20:37:49.673Z",
+    "public": false,
+    "textFilename": "This is a test journal",
+    "user": 2,
+    "order": 1
+  },
+  "model": "journalapp.journal",
+  "pk": 1
+},
+{
+  "fields": {
+    "date": "2015-09-02T20:38:02.337Z",
+    "public": false,
+    "textFilename": "Test_2",
+    "user": 2,
+    "order": 1
+  },
+  "model": "journalapp.journal",
+  "pk": 2
+},
+{
+  "fields": {
+    "date": "2015-09-02T20:38:13.238Z",
+    "public": false,
+    "textFilename": "Test3",
+    "user": 2,
+    "order": 1
+  },
+  "model": "journalapp.journal",
+  "pk": 3
+},
+{
+  "fields": {
+    "date": "2015-09-02T20:52:33.005Z",
+    "text": "Ladeeedaaadeeedaaaaa",
+    "journal": 1,
+    "scrollpos": 0
+  },
+  "model": "journalapp.page",
+  "pk": 1
+},
+{
+  "fields": {
+    "date": "2015-09-02T20:52:49.278Z",
+    "text": "Farkes, milarkes",
+    "journal": 1,
+    "scrollpos": 0
+  },
+  "model": "journalapp.page",
+  "pk": 2
+},
+{
+  "fields": {
+    "date": "2015-09-02T20:53:08.693Z",
+    "text": "WEEEDOOODEEEDOOODEEEEE",
+    "journal": 2,
+    "scrollpos": 0
+  },
+  "model": "journalapp.page",
+  "pk": 3
+},
+{
+  "fields": {
+    "date": "2015-09-02T20:53:21.914Z",
+    "text": "askdjnglflsgdslfgjksdfg",
+    "journal": 3,
+    "scrollpos": 0
+  },
+  "model": "journalapp.page",
+  "pk": 4
+},
+{
+  "fields": {
+    "date": "2015-09-02T20:53:33.916Z",
+    "text": "dsgmsdf;gkmfhklm;kmdfhlk;dmgl;kgmldgdgdghdgdg",
+    "journal": 3,
+    "scrollpos": 0
+  },
+  "model": "journalapp.page",
+  "pk": 5
+},
+{
+  "fields": {
+    "date": "2015-09-02T20:53:47.934Z",
+    "text": "dalskfjanlkafjdfladjfnasfajfndajngsldfgjnldsgalgjnsdlkfgjnsdfgdfs",
+    "journal": 3,
+    "scrollpos": 0
+  },
+  "model": "journalapp.page",
+  "pk": 6
+},
+{
+  "fields": {
+    "top": 0.0,
+    "height": 0.0,
+    "imageFile": "journalimgs/1/This is a test journal",
+    "width": 0.0,
+    "page": 1,
+    "left": 0.0
+  },
+  "model": "journalapp.image",
+  "pk": 1
+},
+{
+  "fields": {
+    "top": 20.0,
+    "height": 50.0,
+    "imageFile": "journalimgs/1/This is a test journal_YwUV9VX",
+    "width": 50.0,
+    "page": 2,
+    "left": 20.0
+  },
+  "model": "journalapp.image",
+  "pk": 2
+},
+{
+  "fields": {
+    "top": 12.0,
+    "height": 120.0,
+    "imageFile": "journalimgs/1/Test3",
+    "width": 120.0,
+    "page": 4,
+    "left": 12.0
+  },
+  "model": "journalapp.image",
+  "pk": 3
+}
+]

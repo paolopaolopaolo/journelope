@@ -1,0 +1,47 @@
+.vert-collapsed {
+	width: 50px !important;
+}
+
+.sidebar {
+	position: fixed;
+	overflow: hidden;
+	min-height: 100%;
+	float: left;
+	width: 200px;
+	background-color: #fff;
+	padding: 20px;
+	border-right: 1px #aaa solid;
+	.journal-view {
+		float: left;
+		min-height: 100%;
+		vertical-align: middle;
+		position: relative;
+		width: 148px;
+		.journals {
+			list-style-type: none;
+			padding: 0;
+			.journal-view-header {
+
+			}
+			.journal {
+				padding: 0;
+				cursor: pointer;
+				&:hover {
+					background-color: #ddd;
+				}
+			}
+		}
+	}
+	.side-caret {
+		position: absolute;
+	    right: 11px;
+    	height: 100%;
+    	background-color: #eee;
+    	padding: 5px;
+    	&:hover {
+    		cursor: pointer;
+    		background-color: #fff;
+    	}
+
+	}
+}

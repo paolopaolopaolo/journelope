@@ -1,0 +1,34 @@
+{% extends "j_app/shared/base.html" %}
+{% load compress %}
+{% load static from staticfiles %}
+
+
+{% block custom_less %}
+	{% compress css%}
+	{{ block.super }}
+	<!-- INSERT LINKS HERE -->
+	<link href="{{STATIC_URL}}j_app/uauth/less/base.less" rel="stylesheet" type="text/less">
+	<!-- 				   -->
+	{% endcompress %}
+{% endblock %}
+
+{% block main_content %}
+	<div class="forms-ctr">
+		<div class="forms container">
+			<div class="row">
+				{% include "j_app/uauth/form_template.html" with target_form=signup_form access_type="signup" %}
+				{% include "j_app/uauth/form_template.html" with target_form=login_form access_type="login"%}
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block custom_js %}
+	{% compress js %}
+	{{ block.super }}
+	<!-- INSERT SCRIPTS HERE -->
+
+	<!-- 				   -->
+	{% endcompress %}
+{% endblock %}

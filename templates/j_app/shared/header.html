@@ -3,19 +3,27 @@
 <div class="header-ctr container-fluid">
   <div class="header row">
     <div class="logo-ctr col-xs-6 col-sm-3" href="/">
+      <a href="/">
       <div class="logo-crop">
         <img src="{% static 'j_app/shared/img/ben_sprites.svg' %}">
       </div>
-      <span class="logo-text">
+      <span class="logo-text hidden-xs">
         <span class="journ">Journ</span><span class="elope">elope</span>
       </span>
+      </a>
     </div>
+    <span class="right-menu">
     {% if isAuth %}
-      {{ current_user }}
+      <div class="header-username">{{ current_user }}</div>
     {% else %}
-    <span class="sign-up-log-in">
-      <a href="/uauth">Sign Up</a>&emsp;|&emsp;<a href="/uauth">Log In</a>
-    </span>
+      <a href="/uauth">Sign Up</a>&emsp;<a href="/uauth">Log In</a>
     {% endif %}
+    </span>
   </div>
 </div>
+{% if isAuth %}
+<ul class="header-menu collapsed">
+  <li>Account Settings</li>
+  <li><a href='/logout'>Logout</a></li>
+</ul>
+{% endif %}

@@ -90,14 +90,13 @@ class CredentialsTesting(SiteTest):
 								'access_type': 'signup',
 								'first_name': 'Andy',
 								'last_name': 'Brickman',
-								'username': 'a.brick',
 								'email': 'a.brick@gmail.com',
 								'password': 'password',
 								'confirm_password': 'password',
 								}, follow=True)
-		self.assertRedirects(resp, '/profile/')
+		self.assertRedirects(resp, '/journal/')
 		try:
-			user = User.objects.get(username = 'a.brick')
+			user = User.objects.get(email = 'a.brick@gmail.com')
 			j_user = J_User.objects.get(user = user)
 		except Exception, e:
 			raise AssertionError('User/J_User not saved')
@@ -105,25 +104,23 @@ class CredentialsTesting(SiteTest):
 		self.assertEqual(user.email, 'a.brick@gmail.com')
 		self.client.logout()
 
-	# Sign up user with taken username
-	@label_test(test="Taken username test:")
-	def test_0001_username_taken(self):
+	# Sign up user with taken email
+	@label_test(test="Taken email test:")
+	def test_0001_email_taken(self):
 		with self.assertRaises(IntegrityError):
 			resp = self.client.post('/uauth/',{
 									'access_type': 'signup',
 									'first_name': 'Andy',
 									'last_name': 'Brickman',
-									'username': 'a.bedelia',
 									'email': 'a.brick@gmail.com',
 									'password': 'password',
 									'confirm_password': 'password',
 									}, follow=True)
 			resp2 = self.client.post('/uauth/',{
 									'access_type': 'signup',
-									'first_name': 'Andy',
-									'last_name': 'Brickman',
-									'username': 'a.bedelia',
-									'email': 'a@gmail.com',
+									'first_name': 'Abigail',
+									'last_name': 'Broderick',
+									'email': 'a.brick@gmail.com',
 									'password': 'password',
 									'confirm_password': 'password',
 									}, follow=True)
@@ -136,7 +133,6 @@ class CredentialsTesting(SiteTest):
 									'access_type': 'signup',
 									'first_name': 'Andy',
 									'last_name': 'Brickman',
-									'username': 'a.bedelia',
 									'email': 'a.brick@gmail.com',
 									'password': 'password',
 									'confirm_password': 'password',
@@ -145,29 +141,12 @@ class CredentialsTesting(SiteTest):
 		user = User.objects.get(email='a.brick@gmail.com')
 		resp = self.client.post('/uauth/',{
 								'access_type': 'login',
-								'uname_email': 'a.brick@gmail.com',
+								'email': 'a.brick@gmail.com',
 								'password': 'password',
 								}, follow=True)
 		self.assertRedirects(resp, '/journal/')
 		self.client.logout()
 
-	# Test username login
-	@label_test(test="Username login test:")
-	def test_0003_username_login(self):
-		pre_resp = self.client.post('/uauth/',{
-									'access_type': 'signup',
-									'first_name': 'Andy',
-									'last_name': 'Brickman',
-									'username': 'a.bedelia',
-									'email': 'a.brick@gmail.com',
-									'password': 'password',
-									'confirm_password': 'password',
-									}, follow=True)
-		user = User.objects.get(email='a.brick@gmail.com')
-		resp = self.client.post('/uauth/',{
-								'access_type': 'login',
-								'uname_email': 'a.bedelia',
-								'password': 'password',
-								}, follow=True)
-		self.assertRedirects(resp, '/journal/')
-		self.client.logout()
+# Test Journal Usage
+class JournalUseTesting(SiteTest):
+	pass

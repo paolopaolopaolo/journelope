@@ -29,9 +29,7 @@ var LandingPage = function () {
   // @returns: None
   this._setSendBehavior = function () {
     this.$send_button.on('click', function (event) {
-      event.preventDefault();
       this._saveToLocalStorage();
-      window.location.href = "/uauth";
     }.bind(this));
 
   };
@@ -89,6 +87,6 @@ var LandingPage = function () {
 };
 
 $(document).ready(function () {
-  var landing_page = new LandingPage();
-  landing_page.initialize();
+  TopLevelApplication.LandingPageView = new LandingPage();
+  TopLevelApplication.LandingPageView.initialize();
 });
