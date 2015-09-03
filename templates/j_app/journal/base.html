@@ -29,12 +29,12 @@
 	<div class="page-view-ctr-wrapper container clearfix">
 		<div class="page-view-ctr container">
 			<div class="row">
-				<div class="col-xs-offset-2 col-xs-10 page-view">
+				<div class="col-xs-offset-3 col-xs-9 page-view">
 				</div>
 			</div>
 			<div class="row">
-				<button class="col-xs-offset-3 col-xs-2 btn-default btn prev-page page-ctrl">Previous Page</button>
-				<button class="col-xs-2 btn-default btn next-page page-ctrl">Next Page</button>
+				<button class="col-md-offset-3 col-md-2 btn-default btn prev-page page-ctrl">Previous Page</button>
+				<button class="col-md-offset-5 col-md-2 btn-default btn next-page page-ctrl">Next Page</button>
 			</div>
 		</div>
 	</div>
@@ -49,7 +49,10 @@
 		<% }); %>
 	</script>
 	<script id="page-view-template" type="text/template">
-
+		<h3><%= page.journal.textFilename %></h3>
+		<h5><%= page.date %></h5>
+		<div class="editable-box">
+		</div>
 	</script>
 {% endblock %}
 
