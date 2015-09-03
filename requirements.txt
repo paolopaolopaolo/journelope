@@ -4,5 +4,6 @@ argparse==1.2.1
 django-appconf==1.0.1
 django-compressor==1.5
 djangorestframework==3.2.3
+mod-wsgi==4.4.13
 six==1.9.0
 wsgiref==0.1.2

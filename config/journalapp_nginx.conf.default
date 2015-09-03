@@ -1,0 +1,28 @@
+upstream journalapp {
+	server 127.0.0.1:8800;
+}
+
+server {
+	listen 		80;
+	server_name 	localhost;
+	charset     	utf-8;
+
+	# max upload size
+	client_max_body_size 75M;
+
+	location /favicon.ico {
+		alias $JAPP_FAVICON_PATH;
+	}
+
+	location /static/ {
+	    alias $JAPP_STATIC_ROOT;
+	}  
+
+	location /media/ {
+	    alias $JAPP_MEDIA_ROOT;
+	} 
+
+	location / {
+	    proxy_pass	http://journalapp;
+	}
+}
