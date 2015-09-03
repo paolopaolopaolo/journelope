@@ -4,6 +4,7 @@
 
 {% block bootstrap_vars %}
 	var JOURNALS = {{ journals }};
+	var PAGE = [{{ page }}];
 {% endblock %}
 
 {% block custom_less %}
@@ -25,6 +26,18 @@
 			<i class="fa fa-chevron-left"></i>
 		</div>
 	</div>
+	<div class="page-view-ctr-wrapper container clearfix">
+		<div class="page-view-ctr container">
+			<div class="row">
+				<div class="col-xs-offset-3 col-xs-9 page-view">
+				</div>
+			</div>
+			<div class="row">
+				<button class="col-md-offset-3 col-md-2 btn-default btn prev-page page-ctrl">Previous Page</button>
+				<button class="col-md-offset-5 col-md-2 btn-default btn next-page page-ctrl">Next Page</button>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
 {% block backbone_templates %}
@@ -34,7 +47,12 @@
 			<%= att.textFilename %>
 		</li>
 		<% }); %>
-
+	</script>
+	<script id="page-view-template" type="text/template">
+		<h3><%= page.journal.textFilename %></h3>
+		<h5><%= page.date %>&emsp;&emsp;Page:<%= page_num %>/<%= len %></h5>
+		<div class="editable-box">
+		</div>
 	</script>
 {% endblock %}
 

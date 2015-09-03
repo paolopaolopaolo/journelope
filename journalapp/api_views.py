@@ -1,4 +1,6 @@
 from rest_framework import generics, mixins
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from journalapp.models import *
 from journalapp.serializers import PageImageSerializer
 import pdb
@@ -31,9 +33,11 @@ class GetJournalPages(mixins.ListModelMixin, generics.GenericAPIView):
 			pages = pages.filter(journal__id=self.journal_id)
 		return [pair_up_page_image_trees(page, images) for page in pages]
 
+	@method_decorator(login_required)
 	def get(self, request, *args, **kwargs):
 		if 'id' in kwargs:
 			self.journal_id = kwargs['id']
 		return self.list(request, *args, **kwargs)
 
-
+class CreateNewJournal(mixins.CreateModelMixin, generics.GenericAPIView):
+	pass

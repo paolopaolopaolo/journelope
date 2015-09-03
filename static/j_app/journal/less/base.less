@@ -10,7 +10,9 @@
 	width: 200px;
 	background-color: #fff;
 	padding: 20px;
-	border-right: 1px #aaa solid;
+	border-right: 1px #ccc solid;
+	border-top: 1px #ccc solid;
+	border-radius: 5px;
 	.journal-view {
 		float: left;
 		min-height: 100%;
@@ -36,12 +38,31 @@
 		position: absolute;
 	    right: 11px;
     	height: 100%;
-    	background-color: #eee;
     	padding: 5px;
     	&:hover {
     		cursor: pointer;
-    		background-color: #fff;
+    		background-color: #eee;
     	}
 
 	}
 }
+
+.page-view-ctr-wrapper{
+	float: left;
+	.page-view {
+		padding: 30px 0;
+		.editable-box {
+			height: 450px;
+			padding: 20px;
+			box-shadow: 0 0 5px #999 inset;
+			border-radius: 5px;
+			background-color: #fff;
+			&:focus {
+				outline: none;
+				box-shadow: 0 0 9px -3px #0D1178 inset;
+			}
+		}
+	}
+}
+
+
