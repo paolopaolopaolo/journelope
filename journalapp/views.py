@@ -123,6 +123,8 @@ class JournalPageView(JournelopeView):
 		journals = Journal.objects.filter(user = j_user)
 		return journals
 
+
+
 	@method_decorator(login_required)
 	def dispatch(self, *args, **kwargs):
 		return super(JournalPageView, self).dispatch(*args, **kwargs)

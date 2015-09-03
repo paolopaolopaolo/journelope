@@ -6,6 +6,9 @@ var JournalPageView = Backbone.View.extend({
 		'click .side-caret': '_toggleSideBarCollapse',
 	},
 
+	// @desc: Toggles collapsing Side Bar
+	// @params: Event Object
+	// @returns: None
 	_toggleSideBarCollapse: function (event) {
 		if (!this.side_bar_collapse) {
 			this.$el.find('.sidebar').addClass('vert-collapsed');
@@ -23,8 +26,11 @@ var JournalPageView = Backbone.View.extend({
 		this.side_bar_collapse = !this.side_bar_collapse;
 	},
 
+	// @desc: Initializes the JournalView
+	// @params: Event Object
+	// @returns: None
 	initialize: function () {
-		this.JournalView = new JournalView();
+		this.JournalView = new JournalView({parent: this});
 	},	
 });
 

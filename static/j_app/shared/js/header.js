@@ -1,7 +1,6 @@
 var Header = function () {
 	var collapsed;
 
-	collapsed = true;
 
 	// @desc: Sets up Callback to Click Event on header_menu_button
 	//        and click event on links
@@ -33,10 +32,10 @@ var Header = function () {
 	// @params: None
 	// @returns: None
 	this._toggleCollapsed = function () {
-		if (this.collapsed) {
-			this.$header_menu.removeClass('collapsed')
+		if (!this.collapsed) {
+			this.$header_menu.addClass('collapsed')
 		} else {
-			this.$header_menu.addClass('collapsed');
+			this.$header_menu.removeClass('collapsed');
 		}
 		this.collapsed = !this.collapsed;
 	};
@@ -45,6 +44,7 @@ var Header = function () {
 	// @params: None
 	// @returns: None
 	this.initialize = function () {
+		this.collapsed = true;
 		this._setEntities();
 		this._setClickBehavior();
 	};
