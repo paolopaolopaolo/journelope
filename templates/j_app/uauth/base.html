@@ -4,7 +4,7 @@
 
 
 {% block custom_less %}
-	{% compress css%}
+	{% compress css inline%}
 	{{ block.super }}
 	<!-- INSERT LINKS HERE -->
 	<link href="{{STATIC_URL}}j_app/uauth/less/base.less" rel="stylesheet" type="text/less">

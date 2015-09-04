@@ -6,7 +6,7 @@
 {% load static from staticfiles }
 
 {% block custom_less %}
-	{% compress css%}
+	{% compress css inline%}
 	{{ block.super }}
 	<!-- INSERT LINKS HERE -->
 
@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block custom_js %}
-	{% compress js %}
+	{% compress js inline%}
 	{{ block.super }}
 	<!-- INSERT SCRIPTS HERE -->
 

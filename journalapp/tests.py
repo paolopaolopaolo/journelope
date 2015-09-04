@@ -1,9 +1,10 @@
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User, AnonymousUser
 from django.db import IntegrityError
+from django.conf import settings
 from django.utils.decorators import method_decorator
 from random import choice
-
+from PIL import Image
 from journalapp.models import *
 
 # Simple Decorators
@@ -149,4 +150,19 @@ class CredentialsTesting(SiteTest):
 
 # Test Journal Usage
 class JournalUseTesting(SiteTest):
-	pass
+        @label_test(test="adminImageUpload")
+        def test_0001_imageUpload(self):
+                test_admin = User.objects.create_superuser('testadmin', 'dpm-mercadoi@hotmail.com', 'password')
+                self.assertTrue(test_admin.is_staff and test_admin.is_superuser)
+                self.client.login(username='testadmin', password='password')
+                path_to_ben = os.path.join(settings.STATIC_ROOT, "j_app", "shared", "img", "ben_sprites.svg")
+                request_body = {
+                	"page": Page.objects.get(id=1),
+                	"ImageFile": Image.open(path_to_ben)
+                	"top": "20",
+                	"left": "20",
+                	"height": "100",
+                	"width": "100",
+                }
+                response = self.client.post('/admin/journalapp/image/add', request_body)
+                self.assertEquals(response.status_code, 200)
