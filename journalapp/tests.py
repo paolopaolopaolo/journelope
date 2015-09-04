@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from random import choice
-from PIL import Image
+import PIL
 from journalapp.models import *
 
 # Simple Decorators
@@ -31,6 +31,7 @@ def label_test(**decorator_kwargs):
 class SiteTest(TestCase):
 	test_name = ''
 	client = None
+	fixtures = ['seed.json',]
 	first_names = [	'Andrew',
 					'Ava',
 					'Barbara',
@@ -155,10 +156,10 @@ class JournalUseTesting(SiteTest):
                 test_admin = User.objects.create_superuser('testadmin', 'dpm-mercadoi@hotmail.com', 'password')
                 self.assertTrue(test_admin.is_staff and test_admin.is_superuser)
                 self.client.login(username='testadmin', password='password')
-                path_to_ben = os.path.join(settings.STATIC_ROOT, "j_app", "shared", "img", "ben_sprites.svg")
+                path_to_img = os.path.join(settings.STATIC_ROOT, "j_app", "shared", "img", "koalas", "koala1.jpg")
                 request_body = {
                 	"page": Page.objects.get(id=1),
-                	"ImageFile": Image.open(path_to_ben)
+                	"ImageFile": PIL.Image.open(path_to_img),
                 	"top": "20",
                 	"left": "20",
                 	"height": "100",
