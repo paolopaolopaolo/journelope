@@ -58,9 +58,9 @@ if DEBUG:
     }
     
 else:
-    with open(os.path.join(BASE_DIR, 'SECRET_KEY.txt'), 'rb') as secret_key:
-        SECRET_KEY = secret_key.read()
-    # SECRET_KEY = os.environ['JAPP_SK']
+    # with open(os.path.join(BASE_DIR, 'SECRET_KEY.txt'), 'rb') as secret_key:
+    #     SECRET_KEY = secret_key.read()
+    SECRET_KEY = os.environ['JAPP_SK']
 
     # Database
     # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
