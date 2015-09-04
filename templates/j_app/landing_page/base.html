@@ -3,7 +3,7 @@
 {% load static from staticfiles }
 
 {% block custom_less %}
-  {% compress css %}
+  {% compress css inline %}
   {{ block.super }}
   <!-- INSERT LINKS HERE -->
   <link type="text/less" rel="stylesheet" href="{{STATIC_URL}}j_app/landing_page/less/base.less"/>
@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block custom_js %}
-  {% compress js %}
+  {% compress js inline %}
   {{ block.super }}
   <!-- INSERT SCRIPTS HERE -->
   <script src="{{STATIC_URL}}j_app/landing_page/js/base.js"></script>

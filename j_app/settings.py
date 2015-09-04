@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
+import os, pdb
 
 try:
     from j_app.local_settings import *
@@ -18,7 +18,8 @@ except ImportError:
     DEBUG = False
     TEMPLATE_DEBUG = False
     ALLOWED_HOSTS = [
-                        '.journelope.com.',
+                        '*',
+                        '.journelope.com',
                         '.journelope.com'
                     ]
 
@@ -57,9 +58,9 @@ if DEBUG:
     }
     
 else:
-    # with open(os.path.join(BASE_DIR, 'SECRET_KEY.txt'), 'rb') as secret_key:
-        # SECRET_KEY = secret_key.read()
-    SECRET_KEY = os.environ['JAPP_SK']
+    with open(os.path.join(BASE_DIR, 'SECRET_KEY.txt'), 'rb') as secret_key:
+        SECRET_KEY = secret_key.read()
+    # SECRET_KEY = os.environ['JAPP_SK']
 
     # Database
     # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
@@ -72,18 +73,18 @@ else:
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-
-COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = False
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
-)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_root")
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_root")
 
+
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = False
+COMPRESS_PRECOMPILERS = (
+    ('text/less', 'lessc {infile} {outfile}'),
+)
 # Application definition
 
 INSTALLED_APPS = (

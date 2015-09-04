@@ -1,0 +1,9 @@
+[uwsgi]
+socket = 127.0.0.1:8800
+chdir = $J_PROJECT_PATH
+module = j_app.wsgi
+processes = 2
+uid = ec2-user
+threads = 4
+chmod-socket = 665
+daemonize = /var/log/uwsgi.log

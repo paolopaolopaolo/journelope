@@ -23,6 +23,7 @@ server {
 	} 
 
 	location / {
-	    proxy_pass	http://journalapp;
+	    uwsgi_pass	journalapp;
+	    include $UWSGI_PARAMS_PATH;
 	}
 }
