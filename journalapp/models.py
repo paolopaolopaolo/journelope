@@ -50,7 +50,7 @@ class Image(models.Model):
 	height = models.FloatField(default=0.0)
 
 	def __unicode__(self):
-		return "%s:%s" % (unicode(self.page.journal.textFilename), unicode(self.imageFile.name))
+		return "IMAGE:%s" % (unicode(self.page.journal.textFilename))
 
 # Compound model
 class PageImage(models.Model):
