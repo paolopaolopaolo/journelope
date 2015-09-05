@@ -1,9 +1,33 @@
 from rest_framework import generics, mixins
+from rest_framework.parser import JSONParser
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from journalapp.models import *
 from journalapp.serializers import PageImageSerializer
+from journalapp.parsers import *
 import pdb
+
+
+# Subclass of GenericAPI that has .create, .update, and .delete
+# methods
+class CUDAPI(
+				mixins.CreateModelMixin,
+				mixins.UpdateModelMixin,
+				mixins.DeleteModelMixin,
+				generics.GenericAPIView
+			):
+
+	lookup_field = 'id'
+	parser_classes = [ JournalImageParser, ]
+
+	def post(self, request, *args, **kwargs):
+		return self.create(self, request, *args, **kwargs)
+
+	def put(self, request, *args, **kwargs):
+		return self.update(self, request, *args, **kwargs)
+
+	def delete(self, request, *args, **kwargs):
+		return self.delete(self, request, *args, **kwargs)		
 
 class GetJournalPages(mixins.ListModelMixin, generics.GenericAPIView):
 	
@@ -39,5 +63,11 @@ class GetJournalPages(mixins.ListModelMixin, generics.GenericAPIView):
 			self.journal_id = kwargs['id']
 		return self.list(request, *args, **kwargs)
 
-class CreateNewJournal(mixins.CreateModelMixin, generics.GenericAPIView):
+class CUDImage(CUDAPI):
+	
+
+class CUDPage(CUDAPI):
+	pass
+
+class CUDJournal(CUDAPI):
 	pass
