@@ -1,16 +1,33 @@
 var JournalView = Backbone.View.extend({
 
-	el: ".journals",
+	el: ".journal-view",
 	template: _.template($("#journal-view-template").html()),
 
 	events: {
 		'click .journal' : '_emitGetJournalPages', 
+		'click .add-journal': '_createNewJournal',
 	},
 
 	// @desc: 
 	// @params:
 	// @returns:
-	_createNewJournal: function (text, images) {
+	_createNewJournal: function (event) {
+		var new_journal;
+		if (event.fromLocalStorage){
+
+		} else {
+			new_journal = new Journal();
+			new_journal.save({
+				id: undefined,
+				user: USER,
+				date: new Date().toISOString(),
+				textFilename: 'Untitled_' + Math.random().toString().slice(2, -1),
+				order: 1,
+				"public": false,
+			}).done(_.bind(function (response) {
+				this.collection.add(response);
+			}, this));
+		}
 
 	},
 
@@ -18,8 +35,9 @@ var JournalView = Backbone.View.extend({
 	// @params: Event Object
 	// @returns: None
 	_emitGetJournalPages: function (event) {
+
 		var _id = $(event.currentTarget).attr('data-jid');
-		this.parent.PageView.trigger('getJournalPage', _id);
+		this.parent.trigger('getJournalPage', _id);
 	},
 
 	// @desc: Empties .journal list and repopulates with collection
@@ -27,8 +45,8 @@ var JournalView = Backbone.View.extend({
 	// @returns: None
 	render: function () {
 		var attributes = _.pluck(this.collection.models, 'attributes');
-		this.$el.empty();
-		this.$el.append(this.template({attrs: attributes}));
+		this.$el.find('.journals').empty();
+		this.$el.find('.journals').append(this.template({attrs: attributes}));
 	},
 
 	// @desc: Checks local storage for stuff, creates a new journal if so
@@ -37,10 +55,11 @@ var JournalView = Backbone.View.extend({
 	_checkLocalStorage: function () {
 		if (localStorage.getItem('demo-entry-text') || 
 			localStorage.getItem('demo-entry-img')) {
-			this._createNewJournal(
-									localStorage.getItem('demo-entry-text'),
-									localStorage.getItem('demo-entry-img')
-									);
+			this._createNewJournal({
+						fromLocalStorage: true,
+						text: localStorage.getItem('demo-entry-text'),
+						images: localStorage.getItem('demo-entry-img')
+					});
 			localStorage.clear();
 		}
 	},
@@ -51,15 +70,19 @@ var JournalView = Backbone.View.extend({
 	initialize: function (attrs) {
 		var jid1;
 		this.parent = attrs['parent'];
-		this.collection = new Journals(JOURNALS);
 		this._checkLocalStorage();
+		this.collection = new Journals(JOURNALS);
 
 		if (this.collection.length > 0) {
 			jid1 = this.collection.models[0].attributes['id'];
-			this.parent.PageView = new PageView({jid: jid1, parent: this.parent}); 
+		} else {
+			jid1 = undefined;
 		}
+		this.parent.PageView = new PageView({jid: jid1, parent: this.parent}); 
 
+		this.listenTo(this.collection, "add", this.render);
 		this.render();
+		
 	},
 
 });

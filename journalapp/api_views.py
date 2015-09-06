@@ -1,9 +1,9 @@
 from rest_framework import generics, mixins
-from rest_framework.parser import JSONParser
+from rest_framework.parsers import JSONParser
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from journalapp.models import *
-from journalapp.serializers import PageImageSerializer
+from journalapp.serializers import *
 from journalapp.parsers import *
 import pdb
 
@@ -13,7 +13,7 @@ import pdb
 class CUDAPI(
 				mixins.CreateModelMixin,
 				mixins.UpdateModelMixin,
-				mixins.DeleteModelMixin,
+				mixins.DestroyModelMixin,
 				generics.GenericAPIView
 			):
 
@@ -21,13 +21,13 @@ class CUDAPI(
 	parser_classes = [ JournalImageParser, ]
 
 	def post(self, request, *args, **kwargs):
-		return self.create(self, request, *args, **kwargs)
+		return self.create(request, *args, **kwargs)
 
 	def put(self, request, *args, **kwargs):
-		return self.update(self, request, *args, **kwargs)
+		return self.update(request, *args, **kwargs)
 
 	def delete(self, request, *args, **kwargs):
-		return self.delete(self, request, *args, **kwargs)		
+		return self.destroy(request, *args, **kwargs)		
 
 class GetJournalPages(mixins.ListModelMixin, generics.GenericAPIView):
 	
@@ -50,9 +50,8 @@ class GetJournalPages(mixins.ListModelMixin, generics.GenericAPIView):
 				result.images = images.filter(page = page)
 			return result
 
-		j_user = J_User.objects.get(user = self.request.user)
-		pages = Page.objects.filter(journal__user=j_user)
-		images = Image.objects.filter(page__journal__user=j_user)
+		pages = Page.objects.filter(journal__user__user=self.request.user)
+		images = Image.objects.filter(page__journal__user__user=self.request.user)
 		if self.journal_id is not None:
 			pages = pages.filter(journal__id=self.journal_id)
 		return [pair_up_page_image_trees(page, images) for page in pages]
@@ -64,10 +63,13 @@ class GetJournalPages(mixins.ListModelMixin, generics.GenericAPIView):
 		return self.list(request, *args, **kwargs)
 
 class CUDImage(CUDAPI):
-	
+	queryset = Image.objects.all()
+	serializer_class = ImageSerializer
 
 class CUDPage(CUDAPI):
-	pass
+	queryset = Page.objects.all()
+	serializer_class = PageSerializer
 
 class CUDJournal(CUDAPI):
-	pass
+	queryset = Journal.objects.all()
+	serializer_class = JournalSerializer

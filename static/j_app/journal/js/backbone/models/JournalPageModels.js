@@ -3,10 +3,10 @@
 var JournalPageModel = Backbone.Model.extend({
 	url: function () {
 		if (this.isNew()) {
-			return urlRoot; 
+			return this.urlRoot; 
 		}
 		else {
-			return urlRoot + this.attributes['id'];
+			return this.urlRoot + this.attributes['id'];
 		}
 	},
 });
@@ -18,6 +18,9 @@ var Journal = JournalPageModel.extend({
 
 var Page = JournalPageModel.extend({
 	urlRoot: '/page/',
+	parse: function (response) {
+		return response['page'];
+	},
 });
 
 var Img = JournalPageModel.extend({

@@ -1,6 +1,8 @@
 from rest_framework.parsers import BaseParser
-import json
+import json, pdb, base64, cStringIO, re, urllib
+from PIL import Image as PImage
 
+from journalapp.models import *
 # Custom Parser(s)
 
 # This will parse all incoming JSON and will return
@@ -10,8 +12,25 @@ class JournalImageParser(BaseParser):
 	
 	media_type = 'application/json'
 
-	def parse(self, stream, media_type, parser_context):
-		request = stream.read()
-		# Do the stuff here
+	def _handle_images(self, base64str):
+		if re.search(r'data:image', base64str) is not None:
+			image_string = cStringIO.StringIO(base64.b64decode(base64str))
+			image = PImage.open(image_string)
+		elif re.search(r'http', base64str) is not None:
+			file_item = cStringIO.StringIO(urllib.urlopen(base64str).read())
+			image = PImage.open(file_item)
+		else:
+			raise Exception('Bad image URL')
+		return image
+		# image.save(pic, image.format, quality = 100)
 
-		return request
+		# pic.seek(0)
+
+	def parse(self, stream, media_type, parser_context):
+		request = json.loads(stream.read())
+		dest_request = request.copy()
+
+		if 'imageFile' in request:
+			dest_request['imageFile'] = self._handle_images(request['imageFile'])
+
+		return dest_request

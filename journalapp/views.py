@@ -10,7 +10,7 @@ from journalapp.serializers import *
 from rest_framework.renderers import JSONRenderer
 
 
-import pdb
+import pdb, json
 
 # Simple Logout Procedure
 def log_out(request):
@@ -123,8 +123,6 @@ class JournalPageView(JournelopeView):
 		journals = Journal.objects.filter(user = j_user)
 		return journals
 
-
-
 	@method_decorator(login_required)
 	def dispatch(self, *args, **kwargs):
 		return super(JournalPageView, self).dispatch(*args, **kwargs)
@@ -135,6 +133,7 @@ class JournalPageView(JournelopeView):
 		serialized_journals = [JournalSerializer(journal).data for journal in journals]
 		json_journals = JSONRenderer().render(serialized_journals)
 		self.context['journals'] = json_journals
+		self.context['user'] = J_User.objects.get(user = request.user).id
 		
 		return render(request, "j_app/journal/base.html", self.context)
 		

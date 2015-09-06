@@ -96,6 +96,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'mod_wsgi.server',
     'compressor',
+    'rest_framework',
     'journalapp'
 )
 

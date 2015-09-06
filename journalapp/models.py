@@ -35,7 +35,7 @@ class Journal(models.Model):
 class Page(models.Model):
 	journal = models.ForeignKey(Journal)
 	date = models.DateTimeField(auto_now=True)
-	text = models.TextField()
+	text = models.TextField(blank=True)
 	scrollpos = models.IntegerField(default=0)
 
 	def __unicode__(self):
