@@ -13,18 +13,13 @@ class JournalImageParser(BaseParser):
 	media_type = 'application/json'
 
 	def _handle_images(self, base64str):
-		if re.search(r'data:image', base64str) is not None:
-			image_string = cStringIO.StringIO(base64.b64decode(base64str))
-			image = PImage.open(image_string)
-		elif re.search(r'http', base64str) is not None:
+		if re.search(r'http', base64str) is not None:
 			file_item = cStringIO.StringIO(urllib.urlopen(base64str).read())
 			image = PImage.open(file_item)
 		else:
-			raise Exception('Bad image URL')
+			image_string = cStringIO.StringIO(base64.b64decode(base64str))
+			image = PImage.open(image_string)
 		return image
-		# image.save(pic, image.format, quality = 100)
-
-		# pic.seek(0)
 
 	def parse(self, stream, media_type, parser_context):
 		request = json.loads(stream.read())

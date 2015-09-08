@@ -26,6 +26,23 @@
 
 			}
 			.journal {
+				.journal-name {
+					width: 65%;
+    				overflow: hidden;
+    				white-space: nowrap;
+    				text-overflow: ellipsis;
+    				float: left;
+				}
+				.delete-journal {
+					padding: 0 10px;
+    				float: right;
+    				background-color: transparent;
+    				border: none;
+					&:hover {
+						color: red;
+					}
+				}
+				width: 100%;
 				padding: 0;
 				cursor: pointer;
 				&:hover {
@@ -67,7 +84,23 @@
 				}
 			}
 		}
+		.journal-subheader {
+			* {
+				display: inline-block;
+				float: left;
+			}
+			.save-status {
+				margin-left: 20px;
+			}
+			.btn {
+				float: right;
+				margin-bottom: 20px;
+				margin-left: 20px;
+			}
+
+		}
 		.editable-box {
+			clear: both;
 			height: 450px;
 			padding: 20px;
 			box-shadow: 0 0 5px #999 inset;

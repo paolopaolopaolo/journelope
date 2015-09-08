@@ -46,7 +46,12 @@
 	<script id="journal-view-template" type="text/template">
 		<% _.each(attrs, function (att) { %>
 		<li id="journal-<%= att.id %>" class="journal" data-jid="<%= att.id %>">
-			<%= att.textFilename %>
+			<div class="journal-name">
+				<%= att.textFilename %>
+			</div>
+			<button class="delete-journal">
+				<i class="fa fa-times"></i>
+			</button>
 		</li>
 		<% }); %>
 	</script>
@@ -55,11 +60,11 @@
 			<span class='j-head-text'><%= journal.textFilename %></span>
 			<button class="edit-journal-name"><i class="fa fa-pencil"></i></button>
 		</h3>
-		<h5><%= date %>&emsp;&emsp;Page:<%= page_num %>/<%= len %>&emsp;
-		&emsp;
-		<span class="save-status"></span>
-		<button class="add-page btn btn-default">Add Page</button>
-		<button class="delete-page btn btn-default">Delete Page</button>
+		<h5 class='journal-subheader'>
+			<div class='page-info'><%= date %>&emsp;&emsp;Page:<%= page_num %>/<%= len %></div>
+			<div class="save-status"></div>
+			<button class="delete-page btn btn-default">Delete Page</button>
+			<button class="add-page btn btn-default">Add Page</button>
 		</h5>
 		<div class="editable-box">
 		</div>

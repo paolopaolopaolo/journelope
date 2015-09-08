@@ -84,7 +84,7 @@ var PageView = Backbone.View.extend({
 		}
 		this.keyPressTimeout = setTimeout(_.bind(function () {
 			$save_status.show()
-						.html('<i class="fa fa-spinner fa-pulse"></i> Saving...');
+						.html('<i class="fa fa-spinner fa-pulse"></i>&nbsp;Saving...');
 			if (this.model.isNew()) {
 				target_model = this.collection.last();
 			} else {
@@ -207,6 +207,13 @@ var PageView = Backbone.View.extend({
 		this.current_idx = this.collection.length - 1;
 	},
 
+	// @desc: Clear Page View
+	// @params: JS Object (attrs)
+	// @returns: None
+	_clearPageView: function () {
+		this.$el.find('.page-view').empty();
+	},
+
 	// @desc: Initialize Page View
 	// @params: JS Object (attrs)
 	// @returns: None
@@ -218,6 +225,7 @@ var PageView = Backbone.View.extend({
 		this.collection = new Pages([], {jid: this.current_journal});
 		this.model = new Page();
 
+		this.listenTo(this.parent, 'clearPageView', this._clearPageView);
 		this.listenTo(this.model, 'change:id', this.render);
 		this.listenTo(this.collection, 'add', this._newPage);
 		this.listenTo(this.collection, 'reset', this._setFirstModel);

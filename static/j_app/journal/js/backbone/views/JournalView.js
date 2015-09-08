@@ -6,9 +6,28 @@ var JournalView = Backbone.View.extend({
 	events: {
 		'click .journal' : '_emitGetJournalPages', 
 		'click .add-journal': '_createNewJournal',
+		'click .delete-journal': '_deleteJournal',
 	},
 
-	// @desc: 
+
+	// @desc: Deletes the journal object
+	// @params: Event Object
+	// @returns: None
+	_deleteJournal: function (event) {
+		var _id = $(event.currentTarget).parent().attr('data-jid'),
+			confirmation = confirm("Delete this journal?");
+
+		if (confirmation) {
+			this.collection.get(_id)
+						   .destroy()
+						   .done(_.bind(function (response) {
+						   		// Emit page delete signal
+						   		this.parent.trigger('clearPageView'); 
+						   }, this));
+		}
+	},
+
+	// @desc: Creates a journal object
 	// @params:
 	// @returns:
 	_createNewJournal: function (event) {
@@ -90,7 +109,7 @@ var JournalView = Backbone.View.extend({
 		}
 		this.parent.PageView = new PageView({jid: jid1, parent: this.parent}); 
 
-		this.listenTo(this.collection, "add change", this.render);
+		this.listenTo(this.collection, "add change remove", this.render);
 		this.listenTo(this.parent, "changeJournalName", this._changeJournalName);
 		this.render();
 		
