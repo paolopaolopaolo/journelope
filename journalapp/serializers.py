@@ -4,7 +4,6 @@ import pdb
 
 
 # Inherit from the master Serializer
-
 class MasterModelSerializer(serializers.ModelSerializer):
 	# Override TargetModel with desired Model, or it won't work
 
@@ -55,7 +54,6 @@ class JournalSerializer(MasterModelSerializer):
 		Page(journal=result, text="").save()
 		return result
 
-
 class PageSerializer(MasterModelSerializer):
 
 	TargetModel = Page
@@ -92,7 +90,7 @@ class ImageSerializer(MasterModelSerializer):
 	page = PageSerializer(required=True)
 	imageFile = serializers.ImageField(allow_empty_file=False, use_url=True)
 
-# Compound Serializers
+# Compound Serializers (Use this for Bootstrap Vars)
 
 class PageImageSerializer(serializers.Serializer):
 	page = PageSerializer(required=True)

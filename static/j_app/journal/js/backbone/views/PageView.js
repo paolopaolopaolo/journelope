@@ -2,6 +2,7 @@ var PageView = Backbone.View.extend({
 
 	el: '.page-view-ctr',
 	template: _.template($('#page-view-template').html()),
+	inJournalEditMode: false,
 
 	current_idx: 0,
 	events: {
@@ -9,6 +10,63 @@ var PageView = Backbone.View.extend({
 		'click .next-page': '_nextPage',
 		'keyup .editable-box': '_savePageText',
 		'click .add-page': '_addPage',
+		'click .delete-page': '_deletePage',
+		'click .edit-journal-name': '_toggleJournalEditButton',
+	},
+
+	// @desc: Delete
+	// @params: None
+	// @returns: None
+	_deletePage: function () {
+		var confirm_delete = confirm("Delete this page?");
+		if (confirm_delete) {
+			if (this.collection.length > 1) {
+				this.collection.at(this.current_idx)
+							   .destroy();
+			}
+			else {
+				alert('No more pages to delete!');
+			} 
+		}
+	},
+
+	// @desc: Toggle journal edits
+	// @params: Event Object
+	// @returns: None
+	_toggleJournalEditButton: function (event) {
+		var current_name, input_version, span_version;
+
+		if (!this.inJournalEditMode) {
+			$(event.currentTarget).find('.fa')
+								  .removeClass('fa-pencil')
+								  .addClass('fa-check');
+			current_name = this.$el.find('.j-head-text').text();
+			
+			input_version = document.createElement('input');
+			input_version.setAttribute('type', 'text');
+			input_version.setAttribute('class', 'j-head-text-input');
+			
+			$(input_version).val(current_name);
+			this.$el.find('.j-head-text').replaceWith($(input_version));
+		} else {
+			$(event.currentTarget).find('.fa')
+								  .removeClass('fa-check')
+								  .addClass('fa-pencil');
+
+			current_name = this.$el.find('.j-head-text-input').val();
+			this.parent.trigger('changeJournalName',
+								{
+									id: this.current_journal,
+									name: current_name,
+								});
+			span_version = document.createElement('span');
+			span_version.setAttribute('class', 'j-head-text');
+
+			$(span_version).text(current_name);
+			this.$el.find('.j-head-text-input').replaceWith($(span_version));
+		}
+		
+		this.inJournalEditMode = !this.inJournalEditMode;
 	},
 
 	// @desc: Save PageText on mouseup
@@ -34,7 +92,7 @@ var PageView = Backbone.View.extend({
 			}
 			target_model.save({text: js_string})
 					  	.done(_.bind(function (response) {
-					  		target_model.set({id: response['id']}, {silent: true});
+					  		target_model.set({id: response['id']});
 					  		$save_status.html('Saved!')
 					  					.fadeOut(3000);
 					  }, this));
@@ -163,6 +221,7 @@ var PageView = Backbone.View.extend({
 		this.listenTo(this.model, 'change:id', this.render);
 		this.listenTo(this.collection, 'add', this._newPage);
 		this.listenTo(this.collection, 'reset', this._setFirstModel);
+		this.listenTo(this.collection, 'remove', this._prevPage);
 		this.listenTo(this.parent, 'getJournalPage', this._resetCollection);
 		
 		this.parent.trigger('getJournalPage', this.current_journal);

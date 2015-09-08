@@ -51,7 +51,10 @@
 		<% }); %>
 	</script>
 	<script id="page-view-template" type="text/template">
-		<h3><%= journal.textFilename %></h3>
+		<h3 class='journal-header'>
+			<span class='j-head-text'><%= journal.textFilename %></span>
+			<button class="edit-journal-name"><i class="fa fa-pencil"></i></button>
+		</h3>
 		<h5><%= date %>&emsp;&emsp;Page:<%= page_num %>/<%= len %>&emsp;
 		&emsp;
 		<span class="save-status"></span>

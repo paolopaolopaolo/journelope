@@ -13,21 +13,22 @@ var JournalView = Backbone.View.extend({
 	// @returns:
 	_createNewJournal: function (event) {
 		var new_journal;
-		if (event.fromLocalStorage){
+		new_journal = new Journal();
+		new_journal.save({
+			id: undefined,
+			user: USER,
+			date: new Date().toISOString(),
+			textFilename: 'Untitled_' + Math.random().toString().slice(2, -1),
+			order: 1,
+			"public": false,
+		}).done(_.bind(function (response) {
+			this.collection.add(response);
+			if (event.fromLocalStorage){
 
-		} else {
-			new_journal = new Journal();
-			new_journal.save({
-				id: undefined,
-				user: USER,
-				date: new Date().toISOString(),
-				textFilename: 'Untitled_' + Math.random().toString().slice(2, -1),
-				order: 1,
-				"public": false,
-			}).done(_.bind(function (response) {
-				this.collection.add(response);
-			}, this));
-		}
+			} else {
+
+			}
+		}, this));
 
 	},
 
@@ -35,7 +36,6 @@ var JournalView = Backbone.View.extend({
 	// @params: Event Object
 	// @returns: None
 	_emitGetJournalPages: function (event) {
-
 		var _id = $(event.currentTarget).attr('data-jid');
 		this.parent.trigger('getJournalPage', _id);
 	},
@@ -64,6 +64,16 @@ var JournalView = Backbone.View.extend({
 		}
 	},
 
+	// @desc: Change 
+	// @params: None
+	// @returns: None
+	_changeJournalName: function (attrs) {
+		this.collection.get(attrs['id'])
+					   .save({
+					   		textFilename: attrs['name']
+					   });
+	},
+
 	// @desc: Sets collection with bootstrap_vars and renders (also sets event listeners)
 	// @params: None
 	// @returns: None
@@ -80,7 +90,8 @@ var JournalView = Backbone.View.extend({
 		}
 		this.parent.PageView = new PageView({jid: jid1, parent: this.parent}); 
 
-		this.listenTo(this.collection, "add", this.render);
+		this.listenTo(this.collection, "add change", this.render);
+		this.listenTo(this.parent, "changeJournalName", this._changeJournalName);
 		this.render();
 		
 	},
