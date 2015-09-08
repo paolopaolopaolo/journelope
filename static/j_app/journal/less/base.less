@@ -26,12 +26,19 @@
 
 			}
 			.journal {
+				width: 100%;
+				padding: 0;
+				cursor: pointer;
 				.journal-name {
+					&:hover {
+						background-color: #ddd;
+					}
 					width: 65%;
     				overflow: hidden;
     				white-space: nowrap;
     				text-overflow: ellipsis;
     				float: left;
+    				margin: 0px 0px 15px 0px;
 				}
 				.delete-journal {
 					padding: 0 10px;
@@ -41,12 +48,6 @@
 					&:hover {
 						color: red;
 					}
-				}
-				width: 100%;
-				padding: 0;
-				cursor: pointer;
-				&:hover {
-					background-color: #ddd;
 				}
 			}
 		}
