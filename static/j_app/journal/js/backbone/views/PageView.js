@@ -106,7 +106,6 @@ var PageView = Backbone.View.extend({
 		this.current_journal = jid;
 		this.current_idx = 0;
 		this.collection.reset();
-		this.images.reset();
 	},
 
 	// @desc: Cycle leftwards thru page
@@ -138,8 +137,10 @@ var PageView = Backbone.View.extend({
 	// @desc: 
 	// @params: Integer
 	// @returns: None
-	_renderImages: function (_id) {
-		var image_objects;
+	_renderImages: function () {
+		var image_objects, _id;
+
+		_id = this.model.attributes.id;
 
 		image_objects = this.images.filter(function (image) {
 				return image.attributes.page.id === _id;
@@ -184,7 +185,6 @@ var PageView = Backbone.View.extend({
 		this.$el.find('.editable-box').imgTxtHybrid({imagecss: {}});
 		this.$el.find('.editable-box').html(stringConvJStoHTML(context.text));
 
-		debugger
 		this._renderImages(model.attributes.id);
 	},
 
@@ -201,22 +201,19 @@ var PageView = Backbone.View.extend({
 		
 		this.collection.fetch().done(_.bind(function () {
 			this.model.set(this.collection.first().attributes);
-		}, this));
-		this.images.fetch().done(_.bind(function (response) {
-
-			console.log(response);
+			this.images.fetch({remove: true});
 		}, this));
 	},
 
 	// @desc: Sets the view model to the last model in the collection
-	// @params: None
+	// @params: Backbone Model, Backbone Collection
 	// @returns: None
 	_newPage: function (model, collection) {
 		this.model.set(this.collection.last().attributes);
 	},
 
 	// @desc: Sets the view model to the last model in the collection
-	// @params: None
+	// @params: Event Object
 	// @returns: None
 	_addPage: function (event) {
 		var journal = this.parent.JournalView.collection.get(this.current_journal),
@@ -256,6 +253,7 @@ var PageView = Backbone.View.extend({
 		this.listenTo(this.collection, 'reset', this._setFirstModel);
 		this.listenTo(this.collection, 'remove', this._prevPage);
 		this.listenTo(this.parent, 'getJournalPage', this._resetCollection);
+		this.listenTo(this.images, 'update', this._renderImages);
 		
 		this.parent.trigger('getJournalPage', this.current_journal);
 	},
