@@ -24,8 +24,5 @@ var Page = JournalPageModel.extend({
 });
 
 var Img = JournalPageModel.extend({
-	urlRoot: '/ji/',
-	parse: function (response) {
-		return response['images'];
-	},
+	urlRoot: '/page/',
 });
