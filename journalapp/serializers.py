@@ -16,6 +16,7 @@ class MasterModelSerializer(serializers.ModelSerializer):
 			if key == 'journal':
 				validated_data[key] = Journal.objects.get(**validated_data['journal'])
 			if key == 'page':
+				validated_data[key]['journal'] = Journal.objects.get(**validated_data[key]['journal'])
 				validated_data[key] = Page.objects.get(**validated_data['page'])
 		result = self.TargetModel(**validated_data)
 		result.save()

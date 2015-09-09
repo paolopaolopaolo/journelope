@@ -1,6 +1,8 @@
 from rest_framework.parsers import BaseParser
-import json, pdb, base64, cStringIO, re, urllib
+import json, pdb, base64, cStringIO, re, urllib, random
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image as PImage
+
 
 from journalapp.models import *
 # Custom Parser(s)
@@ -12,13 +14,32 @@ class JournalImageParser(BaseParser):
 	
 	media_type = 'application/json'
 
+	def _generate_filename(self):
+		string1 = ""
+		string2 = ""
+		for char in range(0, 10):
+			string1 = "".join([string1, str(random.randrange(0, 10))])
+			string2 = "".join([string2, str(random.randrange(0, 10))])
+		return "_".join((string1, string2))
+
 	def _handle_images(self, base64str):
+		size = 0
 		if re.search(r'http', base64str) is not None:
 			file_item = cStringIO.StringIO(urllib.urlopen(base64str).read())
-			image = PImage.open(file_item)
 		else:
-			image_string = cStringIO.StringIO(base64.b64decode(base64str))
-			image = PImage.open(image_string)
+			file_item = cStringIO.StringIO(base64.b64decode(base64str))
+		
+		file_item.seek(0, os.SEEK_END)
+		size = file_item.tell()
+		file_item.seek(0)
+
+		image = InMemoryUploadedFile(
+			file_item,
+			None,
+			".".join([self._generate_filename(), 'PNG']),
+			'image/png',
+			size,
+			None)
 		return image
 
 	def parse(self, stream, media_type, parser_context):

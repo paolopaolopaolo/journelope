@@ -4,7 +4,6 @@
 
 {% block bootstrap_vars %}
 	var JOURNALS = {{ journals }};
-	var PAGE = [{{ page }}];
 	var USER = {{user}};
 {% endblock %}
 
@@ -80,6 +79,7 @@
 	<!-- Backbone Collections -->
 	<script src="{{STATIC_URL}}j_app/journal/js/backbone/collections/Journals.js"></script>
 	<script src="{{STATIC_URL}}j_app/journal/js/backbone/collections/Pages.js"></script>
+	<script src="{{STATIC_URL}}j_app/journal/js/backbone/collections/Imgs.js"></script>
 	<!-- Backbone Views -->
 	<script src="{{STATIC_URL}}j_app/journal/js/backbone/views/JournalView.js"></script>
 	<script src="{{STATIC_URL}}j_app/journal/js/backbone/views/PageView.js"></script>

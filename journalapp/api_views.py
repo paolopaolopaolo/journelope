@@ -52,8 +52,10 @@ class GetJournalPages(mixins.ListModelMixin, generics.GenericAPIView):
 
 		pages = Page.objects.filter(journal__user__user=self.request.user)
 		images = Image.objects.filter(page__journal__user__user=self.request.user)
+
 		if self.journal_id is not None:
 			pages = pages.filter(journal__id=self.journal_id)
+			
 		return [pair_up_page_image_trees(page, images) for page in pages]
 
 	@method_decorator(login_required)

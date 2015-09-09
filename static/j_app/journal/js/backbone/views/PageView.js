@@ -9,12 +9,43 @@ var PageView = Backbone.View.extend({
 		'click .prev-page': '_prevPage',
 		'click .next-page': '_nextPage',
 		'keyup .editable-box': '_savePageText',
+		'mouseup .upload-image': '_saveImage',
 		'click .add-page': '_addPage',
 		'click .delete-page': '_deletePage',
 		'click .edit-journal-name': '_toggleJournalEditButton',
 	},
 
-	// @desc: Delete
+	// @desc: Save the current images
+	_saveImage: function (event) {
+		var target_image, _id;
+		_id = $(event.currentTarget).attr('id');
+		target_image = this.$el.find('.editable-box').imgSrc();
+		target_image = _.clone(_.where(target_image, {id :_id})[0]);
+		target_image.imageFile = target_image.data;
+		target_image.top = parseInt(target_image.top.replace('px', ''), 10);
+		target_image.left = parseInt(target_image.left.replace('px', ''), 10);
+		target_image.height = parseInt(target_image.height.replace('px', ''), 10);
+		target_image.width = parseInt(target_image.width.replace('px', ''), 10);
+
+		delete target_image['id'];
+		delete target_image['data'];
+
+		if (!/_/.test(_id)) {
+			this.images.get(_id)
+					   .save(target_image)
+					   .done(function (resp) {
+					   		console.log(resp);
+					   });
+		} else {
+			target_image.page = this.model.attributes;
+			target_image = new Img(target_image);
+			target_image.save().done(_.bind(function () {
+				this.images.add(target_image);
+			}, this));
+		}
+	},
+
+	// @desc: Delete the page
 	// @params: None
 	// @returns: None
 	_deletePage: function () {
@@ -134,10 +165,42 @@ var PageView = Backbone.View.extend({
 		}
 	},
 
-	// @desc: Renders the first page of the journal
-	// @params: Boolean
+
+	// @desc: Renders images 
+	// @params: Backbone Collection Object
 	// @returns: None
-	render: function () {
+	_renderImages: function (collection) {
+		var image_objects, _id, _idGenerator;
+
+		_id = this.model.attributes.id;
+
+		image_objects = this.images.filter(function (image) {
+				return image.attributes.page.id === _id;
+		});
+
+		_.each(image_objects, _.bind(function (image) {  
+			createAndAppendImgDivs(
+				function () {
+					return image.id;
+				},
+				image.attributes.imageFile,
+				{ 
+					top: image.attributes.top.toString() + 'px',
+					left: image.attributes.left.toString() + 'px',
+					height: image.attributes.height.toString() + 'px',
+					width: image.attributes.width.toString() + 'px',
+				},
+				this.$el.find('.editable-box'));
+		}, this));
+
+
+		this.$el.find('.editable-box').refreshImgInteractions();
+	},
+
+	// @desc: Renders the first page of the journal
+	// @params: Backbone Model object
+	// @returns: None
+	render: function (model) {
 		var context;
 		this.$el.find('.page-view').empty();
 		context = _.clone(this.model.attributes);
@@ -155,44 +218,35 @@ var PageView = Backbone.View.extend({
 		this.$el.find('.editable-box').imgTxtHybrid({imagecss: {}});
 		this.$el.find('.editable-box').html(stringConvJStoHTML(context.text));
 
-
-		// _.each(context.images, _.bind(function (image) {  
-		// 	createAndAppendImgDivs(
-		// 		undefined,
-		// 		image.imageFile,
-		// 		{ 
-		// 			top: image.top.toString() + 'px',
-		// 			left: image.left.toString() + 'px',
-		// 			height: image.height.toString() + 'px',
-		// 			width: image.width.toString() + 'px',
-		// 		},
-		// 		this.$el.find('.editable-box'));
-		// }, this));
-
-
-		// this.$el.find('.editable-box').refreshImgInteractions();
+		this._renderImages(model.attributes.id);
 	},
+
+	
 
 	// @desc: Sets the view model to the first model in the collection
 	// @params: None
 	// @returns: None
 	_setFirstModel: function () {
 		this.collection.jid = this.current_journal;
+		this.images.jid = this.current_journal;
+
 		this.current_idx = 0;
+		
 		this.collection.fetch().done(_.bind(function () {
 			this.model.set(this.collection.first().attributes);
+			this.images.fetch({remove: true});
 		}, this));
 	},
 
 	// @desc: Sets the view model to the last model in the collection
-	// @params: None
+	// @params: Backbone Model, Backbone Collection
 	// @returns: None
 	_newPage: function (model, collection) {
 		this.model.set(this.collection.last().attributes);
 	},
 
 	// @desc: Sets the view model to the last model in the collection
-	// @params: None
+	// @params: Event Object
 	// @returns: None
 	_addPage: function (event) {
 		var journal = this.parent.JournalView.collection.get(this.current_journal),
@@ -223,6 +277,7 @@ var PageView = Backbone.View.extend({
 
 		this.current_idx = 0;
 		this.collection = new Pages([], {jid: this.current_journal});
+		this.images = new Imgs([], {jid: this.current_journal});
 		this.model = new Page();
 
 		this.listenTo(this.parent, 'clearPageView', this._clearPageView);
@@ -231,6 +286,7 @@ var PageView = Backbone.View.extend({
 		this.listenTo(this.collection, 'reset', this._setFirstModel);
 		this.listenTo(this.collection, 'remove', this._prevPage);
 		this.listenTo(this.parent, 'getJournalPage', this._resetCollection);
+		this.listenTo(this.images, 'update', this._renderImages);
 		
 		this.parent.trigger('getJournalPage', this.current_journal);
 	},

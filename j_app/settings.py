@@ -89,6 +89,8 @@ COMPRESS_OFFLINE = False
 COMPRESS_PRECOMPILERS = (
     ('text/less', 'lessc {infile} {outfile}'),
 )
+COMPRESS_JS_FILTERS = []
+
 # Application definition
 
 INSTALLED_APPS = (

@@ -24,8 +24,9 @@ var Page = JournalPageModel.extend({
 });
 
 var Img = JournalPageModel.extend({
-	urlRoot: '/ji/',
-	parse: function (response) {
-		return response['images'];
+	urlRoot: '/page/',
+	save: function (attrs, opts) {
+		this.urlRoot = '/ji/';
+		return Backbone.Model.prototype.save.apply(this, arguments);
 	},
 });
