@@ -15,34 +15,78 @@ var PageView = Backbone.View.extend({
 		'click .edit-journal-name': '_toggleJournalEditButton',
 	},
 
+
+	// @desc: Delete image from images
+	// @params: Integer or string
+	// @returns: None
+	_deleteImage: function (_id) {
+		$save_status = this.$el.find('.save-status');
+		this.images.get(_id)
+				   .destroy()
+				   .done(function () {
+				   		$save_status.html('Saved!')
+						  			.fadeOut(3000);
+				   });
+	},
+
+	// @desc: Controller Logic for saving Images
+	// @params: JS Object
+	// @returns: JS Object
+	_processTargetImage: function (image) {
+
+		image.imageFile = image.data;
+		image.top = parseInt(image.top.replace('px', ''), 10);
+		image.left = parseInt(image.left.replace('px', ''), 10);
+		image.height = parseInt(image.height.replace('px', ''), 10);
+		image.width = parseInt(image.width.replace('px', ''), 10);
+
+		delete image['id'];
+		delete image['data'];
+
+		return image;
+	},
+
 	// @desc: Save the current images
+	// @params: Event Object
+	// @returns: None
 	_saveImage: function (event) {
-		var target_image, _id;
+		var target_image, _id, $save_status;
+		$save_status = this.$el.find('.save-status');
 		_id = $(event.currentTarget).attr('id');
-		target_image = this.$el.find('.editable-box').imgSrc();
-		target_image = _.clone(_.where(target_image, {id :_id})[0]);
-		target_image.imageFile = target_image.data;
-		target_image.top = parseInt(target_image.top.replace('px', ''), 10);
-		target_image.left = parseInt(target_image.left.replace('px', ''), 10);
-		target_image.height = parseInt(target_image.height.replace('px', ''), 10);
-		target_image.width = parseInt(target_image.width.replace('px', ''), 10);
-
-		delete target_image['id'];
-		delete target_image['data'];
-
-		if (!/_/.test(_id)) {
-			this.images.get(_id)
-					   .save(target_image)
-					   .done(function (resp) {
-					   		console.log(resp);
-					   });
-		} else {
-			target_image.page = this.model.attributes;
-			target_image = new Img(target_image);
-			target_image.save().done(_.bind(function () {
-				this.images.add(target_image);
-			}, this));
+		if (event.target.className === 'delImg'){
+			$save_status.show()
+						.html('<i class="fa fa-spinner fa-pulse"></i>&nbsp;Saving...');
+			this._deleteImage(_id);
 		}
+
+		if (this.imageUploadTimeout) {
+			clearTimeout(this.imageUploadTimeout);
+		}
+		this.imageUploadTimeout = setTimeout(_.bind( function () {
+			$save_status.show()
+						.html('<i class="fa fa-spinner fa-pulse"></i>&nbsp;Saving...');
+			target_image = this.$el.find('.editable-box').imgSrc();
+			target_image = _.clone(_.where(target_image, {id :_id})[0]);
+			target_image = this._processTargetImage(target_image);
+
+			if (!/_/.test(_id)) {
+				this.images.get(_id)
+						   .save(target_image)
+						   .done(function (resp) {
+						   		$save_status.html('Saved!')
+						  					.fadeOut(3000);
+						   });
+			} else {
+				target_image.page = this.model.attributes;
+				target_image = new Img(target_image);
+				target_image.save()
+							.done(_.bind(function () {
+								this.images.add(target_image);
+								$save_status.html('Saved!')
+						  					.fadeOut(3000);
+							}, this));
+			}
+		}, this), 2500);
 	},
 
 	// @desc: Delete the page
@@ -172,6 +216,8 @@ var PageView = Backbone.View.extend({
 	_renderImages: function (collection) {
 		var image_objects, _id, _idGenerator;
 
+		this.$el.find('.upload-image').remove();
+
 		_id = this.model.attributes.id;
 
 		image_objects = this.images.filter(function (image) {
@@ -275,6 +321,8 @@ var PageView = Backbone.View.extend({
 		this.parent = attrs['parent'];
 		this.current_journal = attrs['jid'];
 
+		this._saveImage = _.debounce(this._saveImage, 5000);
+
 		this.current_idx = 0;
 		this.collection = new Pages([], {jid: this.current_journal});
 		this.images = new Imgs([], {jid: this.current_journal});
@@ -286,7 +334,7 @@ var PageView = Backbone.View.extend({
 		this.listenTo(this.collection, 'reset', this._setFirstModel);
 		this.listenTo(this.collection, 'remove', this._prevPage);
 		this.listenTo(this.parent, 'getJournalPage', this._resetCollection);
-		this.listenTo(this.images, 'update', this._renderImages);
+		this.listenTo(this.images, 'add', this._renderImages);
 		
 		this.parent.trigger('getJournalPage', this.current_journal);
 	},

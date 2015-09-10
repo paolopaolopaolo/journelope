@@ -42,7 +42,7 @@ class GetJournalPages(mixins.ListModelMixin, generics.GenericAPIView):
 			try:
 				result = PageImage.objects.get(page = page)
 				result.page = page
-				result.images = images.filter(page=page)
+				result.images = images.filter(page = page)
 				result.save()
 			except PageImage.DoesNotExist:
 				result = PageImage(page = page)
