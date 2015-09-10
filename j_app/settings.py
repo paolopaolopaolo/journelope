@@ -70,7 +70,7 @@ else:
             'NAME': os.environ['JAPP_DB_NAME'],
             'HOST': os.environ['JAPP_DB_HOST'],
             'USER': os.environ['JAPP_DB_USER'],
-            'PASSWORD': os.environ['JAPP_DB_USER'],
+            'PASSWORD': os.environ['JAPP_DB_PASSWORD'],
             'PORT': os.environ['JAPP_DB_PORT'],
         }
     }
@@ -78,10 +78,10 @@ else:
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_root")
+STATIC_ROOT = os.path.join(os.path.dirname(os.path.abspath(BASE_DIR)), "static_root")
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_root")
+MEDIA_ROOT = os.path.join(os.path.dirname(os.path.abspath(BASE_DIR)), "media_root")
 
 
 COMPRESS_ENABLED = True
