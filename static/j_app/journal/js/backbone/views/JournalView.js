@@ -28,7 +28,7 @@ var JournalView = Backbone.View.extend({
 	},
 
 	// @desc: Creates a journal object
-	// @params:
+	// @params: Event Object OR JS Object
 	// @returns:
 	_createNewJournal: function (event) {
 		var new_journal;
@@ -43,12 +43,16 @@ var JournalView = Backbone.View.extend({
 		}).done(_.bind(function (response) {
 			this.collection.add(response);
 			if (event.fromLocalStorage){
-
-			} else {
-
+				this.parent.trigger('getJournalPage', 
+					{
+						id: response.id,
+						localStore: {
+							text: event['text'],
+							images: event['images']
+						}
+					});
 			}
 		}, this));
-
 	},
 
 	// @desc: Emits a 'getJournalPage' event with id number
@@ -56,7 +60,7 @@ var JournalView = Backbone.View.extend({
 	// @returns: None
 	_emitGetJournalPages: function (event) {
 		var _id = $(event.currentTarget).attr('data-jid');
-		this.parent.trigger('getJournalPage', _id);
+		this.parent.trigger('getJournalPage', {id: _id});
 	},
 
 	// @desc: Empties .journal list and repopulates with collection
@@ -72,14 +76,13 @@ var JournalView = Backbone.View.extend({
 	// @params: None
 	// @returns: None
 	_checkLocalStorage: function () {
-		if (localStorage.getItem('demo-entry-text') || 
-			localStorage.getItem('demo-entry-img')) {
+		if (window.localStorage.getItem('demo-entry-text') || 
+			window.localStorage.getItem('demo-entry-img')) {
 			this._createNewJournal({
 						fromLocalStorage: true,
-						text: localStorage.getItem('demo-entry-text'),
-						images: localStorage.getItem('demo-entry-img')
+						text: window.localStorage.getItem('demo-entry-text'),
+						images: window.localStorage.getItem('demo-entry-img')
 					});
-			localStorage.clear();
 		}
 	},
 
@@ -99,7 +102,6 @@ var JournalView = Backbone.View.extend({
 	initialize: function (attrs) {
 		var jid1;
 		this.parent = attrs['parent'];
-		this._checkLocalStorage();
 		this.collection = new Journals(JOURNALS);
 
 		if (this.collection.length > 0) {
@@ -107,7 +109,9 @@ var JournalView = Backbone.View.extend({
 		} else {
 			jid1 = undefined;
 		}
+
 		this.parent.PageView = new PageView({jid: jid1, parent: this.parent}); 
+		this._checkLocalStorage();
 
 		this.listenTo(this.collection, "add change remove", this.render);
 		this.listenTo(this.parent, "changeJournalName", this._changeJournalName);

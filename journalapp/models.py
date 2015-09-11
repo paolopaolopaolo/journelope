@@ -57,6 +57,12 @@ class PageImage(models.Model):
 	page = models.OneToOneField(Page)
 	images = models.ManyToManyField(Image, blank=True)
 
+# Temporary Journal Page model
+class TemporaryJournalPage(models.Model):
+	random_hash = models.CharField(max_length = 20)
+	text = models.TextField()
+	images = models.ManyToManyField(Image, blank=True)
+
 # This will delete from file the image that is being deleted
 
 @receiver(post_delete, sender=Image)

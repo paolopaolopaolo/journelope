@@ -32,7 +32,8 @@ var PageView = Backbone.View.extend({
 	// @desc: Controller Logic for saving Images
 	// @params: JS Object
 	// @returns: JS Object
-	_processTargetImage: function (image) {
+	_processTargetImage: function (image, keepId) {
+
 
 		image.imageFile = image.data;
 		image.top = parseInt(image.top.replace('px', ''), 10);
@@ -40,7 +41,9 @@ var PageView = Backbone.View.extend({
 		image.height = parseInt(image.height.replace('px', ''), 10);
 		image.width = parseInt(image.width.replace('px', ''), 10);
 
-		delete image['id'];
+		if (!keepId) {
+			delete image['id'];
+		}
 		delete image['data'];
 
 		return image;
@@ -50,6 +53,7 @@ var PageView = Backbone.View.extend({
 	// @params: Event Object
 	// @returns: None
 	_saveImage: function (event) {
+
 		var target_image, _id, $save_status;
 		$save_status = this.$el.find('.save-status');
 		_id = $(event.currentTarget).attr('id');
@@ -59,10 +63,10 @@ var PageView = Backbone.View.extend({
 			this._deleteImage(_id);
 		}
 
-		if (this.imageUploadTimeout) {
-			clearTimeout(this.imageUploadTimeout);
+		if (this.pageUpdateTimeout) {
+			clearTimeout(this.pageUpdateTimeout);
 		}
-		this.imageUploadTimeout = setTimeout(_.bind( function () {
+		this.pageUpdateTimeout = setTimeout(_.bind( function () {
 			$save_status.show()
 						.html('<i class="fa fa-spinner fa-pulse"></i>&nbsp;Saving...');
 			target_image = this.$el.find('.editable-box').imgSrc();
@@ -154,10 +158,10 @@ var PageView = Backbone.View.extend({
 			js_string = ($editbox.stringConvHTMLtoJS() ? $editbox.stringConvHTMLtoJS() : ''),
 			target_model;
 
-		if (this.keyPressTimeout) {
-			clearTimeout(this.keyPressTimeout);
+		if (this.pageUpdateTimeout) {
+			clearTimeout(this.pageUpdateTimeout);
 		}
-		this.keyPressTimeout = setTimeout(_.bind(function () {
+		this.pageUpdateTimeout = setTimeout(_.bind(function () {
 			$save_status.show()
 						.html('<i class="fa fa-spinner fa-pulse"></i>&nbsp;Saving...');
 			if (this.model.isNew()) {
@@ -177,8 +181,12 @@ var PageView = Backbone.View.extend({
 	// @desc: Sets collection to appropriate journal
 	// @params: Integer or String
 	// @returns: None
-	_resetCollection: function (jid) {
-		this.current_journal = jid;
+	_resetCollection: function (JournalObject) {
+		if (JournalObject.localStore) {
+			this.demo_entry = JournalObject.localStore;
+			localStorage.clear();
+		}
+		this.current_journal = JournalObject.id;
 		this.current_idx = 0;
 		this.collection.reset();
 	},
@@ -188,7 +196,7 @@ var PageView = Backbone.View.extend({
 	// @returns: None
 	_prevPage: function () {
 		this.current_idx--;
-		if (this.current_idx < 0) {
+		if (this.current_idx < 0 && this.collection.last()) {
 			this.current_idx = this.collection.length - 1;
 			this.model.set(this.collection.last().attributes);
 		} else {
@@ -208,7 +216,6 @@ var PageView = Backbone.View.extend({
 			this.model.set(this.collection.at(this.current_idx).attributes);
 		}
 	},
-
 
 	// @desc: Renders images 
 	// @params: Backbone Collection Object
@@ -241,6 +248,9 @@ var PageView = Backbone.View.extend({
 
 
 		this.$el.find('.editable-box').refreshImgInteractions();
+		if (this.demo_entry) {
+			this._reRenderText();
+		}
 	},
 
 	// @desc: Renders the first page of the journal
@@ -265,14 +275,13 @@ var PageView = Backbone.View.extend({
 		this.$el.find('.editable-box').html(stringConvJStoHTML(context.text));
 
 		this._renderImages(model.attributes.id);
-	},
+	},	
 
-	
-
-	// @desc: Sets the view model to the first model in the collection
+	// @desc: Sets the view model to the first Page in the Journal
 	// @params: None
 	// @returns: None
 	_setFirstModel: function () {
+		var destined_model, new_images;
 		this.collection.jid = this.current_journal;
 		this.images.jid = this.current_journal;
 
@@ -280,7 +289,20 @@ var PageView = Backbone.View.extend({
 		
 		this.collection.fetch().done(_.bind(function () {
 			this.model.set(this.collection.first().attributes);
-			this.images.fetch({remove: true});
+			this.images.fetch({remove: true}).done(_.bind(function () {
+				if (this.demo_entry) {
+			
+					new_images = JSON.parse(this.demo_entry.images);
+					new_images = _.each(new_images, _.bind(function (img) {
+											img.page = this.model.attributes;
+											img = this._processTargetImage(img, true);
+											img.imageFile = "data:image/png;base64," + img.imageFile;
+											return img;
+										}, this));
+					this._reRenderText();
+					// this.images.add(new_images);		
+				}
+			}, this));
 		}, this));
 	},
 
@@ -288,13 +310,14 @@ var PageView = Backbone.View.extend({
 	// @params: Backbone Model, Backbone Collection
 	// @returns: None
 	_newPage: function (model, collection) {
+		this.current_idx = this.collection.length - 1;
 		this.model.set(this.collection.last().attributes);
 	},
 
 	// @desc: Sets the view model to the last model in the collection
-	// @params: Event Object
+	// @params: None
 	// @returns: None
-	_addPage: function (event) {
+	_addPage: function () {
 		var journal = this.parent.JournalView.collection.get(this.current_journal),
 			newpage_attrs = {
 				id: undefined,
@@ -312,6 +335,13 @@ var PageView = Backbone.View.extend({
 	// @returns: None
 	_clearPageView: function () {
 		this.$el.find('.page-view').empty();
+	},
+
+	_reRenderText: function () {	
+		this.$el.find('.editable-box')
+				.append(this.demo_entry.text);
+		this.demo_entry = undefined;
+		
 	},
 
 	// @desc: Initialize Page View
@@ -332,10 +362,13 @@ var PageView = Backbone.View.extend({
 		this.listenTo(this.model, 'change:id', this.render);
 		this.listenTo(this.collection, 'add', this._newPage);
 		this.listenTo(this.collection, 'reset', this._setFirstModel);
-		this.listenTo(this.collection, 'remove', this._prevPage);
+		// this.listenTo(this.collection, 'remove', this._prevPage);
 		this.listenTo(this.parent, 'getJournalPage', this._resetCollection);
 		this.listenTo(this.images, 'add', this._renderImages);
-		
-		this.parent.trigger('getJournalPage', this.current_journal);
+
+
+		if (!this.demo_entry) {
+			this.parent.trigger('getJournalPage', {id: this.current_journal});
+		}
 	},
 });

@@ -2,7 +2,7 @@
 
 <div class="header-ctr container-fluid">
   <div class="header row">
-    <div class="logo-ctr col-xs-6 col-sm-3" href="/">
+    <div class="logo-ctr col-xs-5 col-sm-3" href="/">
       <a href="/">
       <div class="logo-crop">
         <img src="{% static 'j_app/shared/img/ben_sprites.svg' %}">
@@ -12,7 +12,7 @@
       </span>
       </a>
     </div>
-    <span class="col-xs-6 col-sm-3 right-menu">
+    <span class="col-xs-7 col-sm-3 right-menu">
     {% if isAuth %}
       <div class="header-username">{{ current_user }}</div>
     {% else %}
@@ -23,7 +23,6 @@
 </div>
 {% if isAuth %}
 <ul class="header-menu collapsed">
-  <li>Account Settings</li>
   <li><a href='/logout'>Logout</a></li>
 </ul>
 {% endif %}

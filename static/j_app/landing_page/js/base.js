@@ -13,22 +13,22 @@ var LandingPage = function () {
   // @params: None
   // @returns: None
   this._saveToLocalStorage = function () {
-    if (localStorage.getItem('demo-entry-text') !== null || 
-        localStorage.getItem('demo-entry-img') !== null) {
-      localStorage.clear();
-    }
-    localStorage.setItem('demo-entry-text', this.$text_box.stringConvHTMLtoJS());
-    localStorage.setItem('demo-entry-img', JSON.stringify(this.$text_box.imgSrc()));
-    
+    window.localStorage.setItem('demo-entry-text', this.$text_box.text());
+    window.localStorage.setItem('demo-entry-img', JSON.stringify(this.$text_box.imgSrc()));
+    alert(window.localStorage.getItem('demo-entry-text'));
+    location.href = '/uauth';
   };
 
   // @desc: Creates event bound to $send_button that
   //        submits the contents of $text_box to localStorage
   //        and then navigates over to user auth page
-  // @params: None
+  // @params: Event Object
   // @returns: None
   this._setSendBehavior = function () {
     this.$send_button.on('click', function (event) {
+      event.preventDefault();
+      alert('click');
+      // event.stopPropagation();
       this._saveToLocalStorage();
     }.bind(this));
 
@@ -40,7 +40,6 @@ var LandingPage = function () {
   this._setEntities = function () {
     this.$send_button = $('.save-sample-text');
     this.$text_box = $('.sample-text-input');
-
   };
 
   // @desc: If localStorage has data, preset the Text Box with stuff
@@ -48,10 +47,10 @@ var LandingPage = function () {
   // @returns: None
   this._presetTextbox = function () {
     var img, imgs, text;
-    if (localStorage.getItem('demo-entry-text') !== null && 
-        localStorage.getItem('demo-entry-img') !== null) {
-      text = localStorage.getItem('demo-entry-text');
-      imgs = JSON.parse(localStorage.getItem('demo-entry-img'));
+    if (window.localStorage.getItem('demo-entry-text') !== null && 
+        window.localStorage.getItem('demo-entry-img') !== null) {
+      text = window.localStorage.getItem('demo-entry-text');
+      imgs = JSON.parse(window.localStorage.getItem('demo-entry-img'));
       this.$text_box.html(stringConvJStoHTML(text));
       function identity(Obj) {
         return function () { return Obj;};

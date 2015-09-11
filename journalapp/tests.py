@@ -4,8 +4,10 @@ from django.db import IntegrityError
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from random import choice
-import PIL
+from PIL import Image as Pimage
 from journalapp.models import *
+import cStringIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 # Simple Decorators
 def login_as_user(**decorator_kwargs):
@@ -151,20 +153,41 @@ class CredentialsTesting(SiteTest):
 
 # Test Journal Usage
 class JournalUseTesting(SiteTest):
-	test_name = "JournalUse (ADMIN)"	
-    @label_test(test="adminImageUpload")
-    def test_0001_imageUpload(self):
-            test_admin = User.objects.create_superuser('testadmin', 'dpm-mercadoi@hotmail.com', 'password')
-            self.assertTrue(test_admin.is_staff and test_admin.is_superuser)
-            self.client.login(username='testadmin', password='password')
-            path_to_img = os.path.join(settings.STATIC_ROOT, "j_app", "shared", "img", "koalas", "koala1.jpg")
-            request_body = {
-            	"page": Page.objects.get(id=1),
-            	"ImageFile": PIL.Image.open(path_to_img),
-            	"top": "20",
-            	"left": "20",
-            	"height": "100",
-            	"width": "100",
-            }
-            response = self.client.post('/admin/journalapp/image/add', request_body, follow=True)
-            self.assertEquals(response.status_code, 200)
+	test_name = "JournalUse (ADMIN)"
+
+	@label_test(test="adminImageUpload")
+	@login_as_user(username='a.bedelia@gmail.com', password='abcd1234')
+	def test_0001_imageUpload(self):
+
+			path_to_img = os.path.join(settings.STATIC_ROOT, "j_app", "shared", "img", "koalas", "koala1.jpg")
+
+			juser = J_User.objects.get(user=User.objects.get(email='a.bedelia@gmail.com'))
+			journal = Journal(user=juser, textFilename='test')
+			journal.save()
+			page = Page(journal=journal, text="Shyamalamadingdong")
+			page.save()
+			image = Pimage.open(path_to_img)
+			image_file = cStringIO.StringIO()
+			image.save(image_file, format='JPEG')
+
+			image_file.seek(0, os.SEEK_END)
+			image_size = image_file.tell()
+			image_file.seek(0)
+
+			request_body = {
+				"page": page,
+				"imageFile": open(image_file, 'rb'),
+				"top": "20",
+				"left": "20",
+				"height": "100",
+				"width": "100",
+			}
+			
+			response = self.client.post('/ji/', request_body, follow=True)
+			
+			print response.content
+			print response.wsgi_request
+			print dir(response)
+			
+			self.assertEquals(response.status_code, 200)
+
