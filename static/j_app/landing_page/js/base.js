@@ -15,7 +15,6 @@ var LandingPage = function () {
   this._saveToLocalStorage = function () {
     window.localStorage.setItem('demo-entry-text', this.$text_box.text());
     window.localStorage.setItem('demo-entry-img', JSON.stringify(this.$text_box.imgSrc()));
-    alert(window.localStorage.getItem('demo-entry-text'));
     location.href = '/uauth';
   };
 
@@ -27,8 +26,6 @@ var LandingPage = function () {
   this._setSendBehavior = function () {
     this.$send_button.on('click', function (event) {
       event.preventDefault();
-      alert('click');
-      // event.stopPropagation();
       this._saveToLocalStorage();
     }.bind(this));
 

@@ -30,12 +30,12 @@
 	<div class="page-view-ctr-wrapper container clearfix">
 		<div class="page-view-ctr container">
 			<div class="row">
-				<div class="col-xs-offset-3 col-xs-9 page-view">
+				<div class="col-xs-offset-3 col-xs-9 col-sm-offset-2 col-sm-9 page-view">
 				</div>
 			</div>
 			<div class="row">
-				<button class="col-md-offset-3 col-md-2 btn-default btn prev-page page-ctrl">Previous Page</button>
-				<button class="col-md-offset-5 col-md-2 btn-default btn next-page page-ctrl">Next Page</button>
+				<button class="col-xs-offset-3 col-xs-2 btn-default btn prev-page page-ctrl">Previous Page</button>
+				<button class="col-xs-offset-5 col-xs-2 btn-default btn next-page page-ctrl">Next Page</button>
 			</div>
 		</div>
 	</div>
@@ -55,16 +55,22 @@
 		<% }); %>
 	</script>
 	<script id="page-view-template" type="text/template">
-		<h3 class='journal-header'>
-			<span class='j-head-text'><%= journal.textFilename %></span>
-			<button class="edit-journal-name"><i class="fa fa-pencil"></i></button>
-		</h3>
-		<h5 class='journal-subheader'>
-			<div class='page-info'><%= date %>&emsp;&emsp;Page:<%= page_num %>/<%= len %></div>
-			<div class="save-status"></div>
-			<button class="delete-page btn btn-default">Delete Page</button>
+		<div class="journal-header col-xs-12">
+			<div class="row">
+				<span class="j-head-text col-xs-8"><%= journal.textFilename %></span>
+				<button class="edit-journal-name col-xs-4"><i class="fa fa-pencil"></i></button>
+			</div>
+		</div>
+		<div class="journal-subheader col-xs-12">
+			<div class="row">
+			<div class="page-info col-xs-8"><%= date %>&emsp;&emsp;Page:<%= page_num %>/<%= len %></div>
+			<div class="save-status col-xs-4"></div>
+			</div>
+		</div>
+		<div class="add-rem-page-ctrl col-xs-12">
 			<button class="add-page btn btn-default">Add Page</button>
-		</h5>
+			<button class="delete-page btn btn-default">Delete Page</button>
+		</div>
 		<div class="editable-box">
 		</div>
 	</script>
