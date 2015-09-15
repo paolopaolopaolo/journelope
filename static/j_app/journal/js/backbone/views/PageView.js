@@ -125,7 +125,8 @@ var PageView = Backbone.View.extend({
 			input_version.setAttribute('type', 'text');
 			input_version.setAttribute('class', 'j-head-text-input');
 			
-			$(input_version).val(current_name);
+			$(input_version).addClass('col-xs-8')
+							.val(current_name);
 			this.$el.find('.j-head-text').replaceWith($(input_version));
 		} else {
 			$(event.currentTarget).find('.fa')
@@ -138,10 +139,12 @@ var PageView = Backbone.View.extend({
 									id: this.current_journal,
 									name: current_name,
 								});
+
 			span_version = document.createElement('span');
 			span_version.setAttribute('class', 'j-head-text');
 
-			$(span_version).text(current_name);
+			$(span_version).addClass('col-xs-8')
+						   .text(current_name);
 			this.$el.find('.j-head-text-input').replaceWith($(span_version));
 		}
 		
@@ -367,7 +370,7 @@ var PageView = Backbone.View.extend({
 		this.listenTo(this.images, 'add', this._renderImages);
 
 
-		if (!this.demo_entry) {
+		if (!this.demo_entry && this.current_journal) {
 			this.parent.trigger('getJournalPage', {id: this.current_journal});
 		}
 	},

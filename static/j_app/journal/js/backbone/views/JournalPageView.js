@@ -31,9 +31,11 @@ var JournalPageView = Backbone.View.extend({
 	// @desc: Initializes the JournalView
 	// @params: Event Object
 	// @returns: None
-	initialize: function () {
+	initialize: function (attrs) {
+		this.parent = attrs.parent;
+		$.removeCookie('j_app_guid');
 		this.JournalView = new JournalView({parent: this});
 	},	
 });
 
-TopLevelApplication.JournalPageView = new JournalPageView();
+TopLevelApplication.JournalPageView = new JournalPageView({parent: TopLevelApplication});

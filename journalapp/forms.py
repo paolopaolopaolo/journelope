@@ -2,8 +2,6 @@ from django import forms
 from django.db import IntegrityError
 from django.contrib.auth.models import User
 
-class LandingPageForm(forms.Form):
-    pass
 
 class SignUpForm(forms.Form):
     first_name = forms.CharField(max_length = 100)

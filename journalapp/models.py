@@ -7,7 +7,10 @@ import re, os
 
 # Helper functions
 def upload_image(instance, filename):
-	user = str(instance.page.journal.user.user.id)
+	try:
+		user = str(instance.page.journal.user.user.id)
+	except Exception, e:
+		user = 'temp'
 	journal = str(instance.page.journal.id)
 	page = str(instance.page.id)
 	filename_subbed = re.sub(r"[\'\"\/ ]", "_", filename)
@@ -23,7 +26,7 @@ class J_User(models.Model):
 		return unicode(self.user)
 
 class Journal(models.Model):
-	user = models.ForeignKey(J_User)
+	user = models.ForeignKey(J_User, null=True)
 	date = models.DateTimeField(auto_now=True)
 	textFilename = models.CharField(max_length = 200)
 	order = models.IntegerField(default = 1)
@@ -59,9 +62,9 @@ class PageImage(models.Model):
 
 # Temporary Journal Page model
 class TemporaryJournalPage(models.Model):
-	random_hash = models.CharField(max_length = 20)
-	text = models.TextField()
-	images = models.ManyToManyField(Image, blank=True)
+	guid = models.CharField(max_length = 20)
+	pageimage = models.OneToOneField(PageImage)
+	journal = models.OneToOneField(Journal)
 
 # This will delete from file the image that is being deleted
 

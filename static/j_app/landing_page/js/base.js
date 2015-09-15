@@ -22,12 +22,15 @@ var LandingPage = function () {
   // @params: None
   // @returns: None
   this._saveToLocalStorage = function () {
-    var guid, $text_input, $img_input;
+    var guid, $text_input, $img_input, $guid;
     guid = this._generateGUID();
 
     // Set cooke on front-end
     $.cookie('j_app_guid', guid);
 
+    $guid = $('<input />').attr('type', 'hidden')
+                          .attr('name', 'guid')
+                          .attr('value', guid);
     $text_input = $('<input />').attr('type', 'hidden')
                                 .attr('name', 'text')
                                 .attr('value', this.$text_box.text());
@@ -38,6 +41,7 @@ var LandingPage = function () {
     // Append inputs to form
     this.$form.append($text_input);
     this.$form.append($img_input);
+    this.$form.append($guid);
   };
 
   // @desc: Creates event bound to $send_button that
