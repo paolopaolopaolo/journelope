@@ -63,10 +63,10 @@ var PageView = Backbone.View.extend({
 			this._deleteImage(_id);
 		}
 
-		if (this.pageUpdateTimeout) {
-			clearTimeout(this.pageUpdateTimeout);
+		if (this.imageUploadTimeout) {
+			clearTimeout(this.imageUploadTimeout);
 		}
-		this.pageUpdateTimeout = setTimeout(_.bind( function () {
+		this.imageUploadTimeout = setTimeout(_.bind( function () {
 			$save_status.show()
 						.html('<i class="fa fa-spinner fa-pulse"></i>&nbsp;Saving...');
 			target_image = this.$el.find('.editable-box').imgSrc();
@@ -125,7 +125,8 @@ var PageView = Backbone.View.extend({
 			input_version.setAttribute('type', 'text');
 			input_version.setAttribute('class', 'j-head-text-input');
 			
-			$(input_version).val(current_name);
+			$(input_version).addClass('col-xs-8')
+							.val(current_name);
 			this.$el.find('.j-head-text').replaceWith($(input_version));
 		} else {
 			$(event.currentTarget).find('.fa')
@@ -138,10 +139,12 @@ var PageView = Backbone.View.extend({
 									id: this.current_journal,
 									name: current_name,
 								});
+
 			span_version = document.createElement('span');
 			span_version.setAttribute('class', 'j-head-text');
 
-			$(span_version).text(current_name);
+			$(span_version).addClass('col-xs-8')
+						   .text(current_name);
 			this.$el.find('.j-head-text-input').replaceWith($(span_version));
 		}
 		
@@ -351,8 +354,6 @@ var PageView = Backbone.View.extend({
 		this.parent = attrs['parent'];
 		this.current_journal = attrs['jid'];
 
-		this._saveImage = _.debounce(this._saveImage, 5000);
-
 		this.current_idx = 0;
 		this.collection = new Pages([], {jid: this.current_journal});
 		this.images = new Imgs([], {jid: this.current_journal});
@@ -367,7 +368,7 @@ var PageView = Backbone.View.extend({
 		this.listenTo(this.images, 'add', this._renderImages);
 
 
-		if (!this.demo_entry) {
+		if (!this.demo_entry && this.current_journal) {
 			this.parent.trigger('getJournalPage', {id: this.current_journal});
 		}
 	},

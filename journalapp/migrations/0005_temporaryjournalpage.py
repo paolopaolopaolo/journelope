@@ -15,9 +15,8 @@ class Migration(migrations.Migration):
             name='TemporaryJournalPage',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('random_hash', models.CharField(max_length=20)),
-                ('text', models.TextField()),
-                ('images', models.ManyToManyField(to='journalapp.Image', blank=True)),
+                ('guid', models.CharField(max_length=20)),
+                ('pageimage', models.OneToOneField(to='journalapp.PageImage')),
             ],
             options={
             },

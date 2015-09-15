@@ -8,7 +8,7 @@ from journalapp.forms import *
 from journalapp.decorators import *
 from journalapp.serializers import *
 from rest_framework.renderers import JSONRenderer
-
+from journalapp.parsers import JournalImageParser as JIP
 
 import pdb, json
 
@@ -31,6 +31,10 @@ class JournelopeView(View):
 		'showsAuthenticatedHeader': False,
 		'hasBackbone': False
 	}
+
+	def convertPxToFloat(self, string):
+		string = string[0:-2]
+		return float(string)
 
 	# Use this function to set reusable context parameters
 	def set_params(self, view):
@@ -61,6 +65,42 @@ class LandingPageView(JournelopeView):
 		if request.user.is_authenticated():
 			return redirect('JournalPage')
 		return render(request, 'j_app/landing_page/base.html', self.context)
+
+	def post(self, request, *args, **kwargs):
+		post_data = request.POST
+
+		guid = request.POST['guid']
+		text = request.POST['text']
+
+		new_journal = Journal(user=None, textFilename=text[0:7])
+		new_journal.save()
+
+		new_page = Page(journal=new_journal, text=text)
+		new_page.save()
+
+		new_pageimage = PageImage(page=new_page)
+		new_pageimage.save()
+
+		images = json.loads(post_data['imgs'])
+		for image in images:
+			image['imageFile'] = JIP.handle_image(image['data'])
+			image['top'] = self.convertPxToFloat(image['top'])
+			image['left'] = self.convertPxToFloat(image['left'])
+			image['height'] = self.convertPxToFloat(image['height'])
+			image['width'] = self.convertPxToFloat(image['width'])
+			image['page'] = new_page
+			del image['id']
+			del image['data']
+
+			new_image = Image(**image)
+			new_image.save()
+			new_pageimage.images.add(new_image)
+			new_pageimage.save()
+
+		temp_jp = TemporaryJournalPage(guid=guid, pageimage=new_pageimage, journal=new_journal)
+		temp_jp.save()
+		
+		return redirect('UAuthPage')
 
 class UserAuthenticationView(JournelopeView):
 	
@@ -129,6 +169,17 @@ class JournalPageView(JournelopeView):
 
 	@set_user
 	def get(self, request, *args, **kwargs):
+		if 'j_app_guid' in request.COOKIES:
+			try:
+				target_temp = TemporaryJournalPage.objects.get(guid=request.COOKIES['j_app_guid'])
+				target_journal = target_temp.journal
+				target_journal.user = J_User.objects.get(user=request.user)
+				target_journal.save()
+				target_temp.delete()
+				print "GET from Cookie: Success"
+			except Exception, e:
+				print str(e)
+
 		journals = self.get_queryset(request)
 		serialized_journals = [JournalSerializer(journal).data for journal in journals]
 		json_journals = JSONRenderer().render(serialized_journals)

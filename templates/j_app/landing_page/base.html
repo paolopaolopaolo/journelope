@@ -15,7 +15,8 @@
 <div class="panel panel-1">
   <div class="container">
     <h1 class="header-text">Write Your Feelings</h1>
-    <form action="/uauth" method="GET">
+    <form class="landing-page-form" action="/" method="POST">
+      {% csrf_token %}
       <div class="col-xs-12 sample-text-input" data-ph="Drag and drop images from your folders or type out your feelings!"></div>
       <button class="col-xs-8 col-xs-offset-2 btn-default btn save-sample-text">SAVE</button>
     </form>

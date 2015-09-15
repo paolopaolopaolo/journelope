@@ -21,6 +21,10 @@ class JournalImageParser(BaseParser):
 			string1 = "".join([string1, str(random.randrange(0, 10))])
 			string2 = "".join([string2, str(random.randrange(0, 10))])
 		return "_".join((string1, string2))
+	
+	@classmethod
+	def handle_image(cls, base64str):
+		return cls()._handle_images(base64str)
 
 	def _handle_images(self, base64str):
 		size = 0
