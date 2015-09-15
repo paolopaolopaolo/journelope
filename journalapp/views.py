@@ -171,7 +171,7 @@ class JournalPageView(JournelopeView):
 	def get(self, request, *args, **kwargs):
 		if 'j_app_guid' in request.COOKIES:
 			try:
-				target_temp = TemporaryJournalPage.objects.get(guid = request.COOKIES['j_app_guid'])
+				target_temp = TemporaryJournalPage.objects.get(guid=request.COOKIES['j_app_guid'])
 				target_journal = target_temp.journal
 				target_journal.user = J_User.objects.get(user=request.user)
 				target_journal.save()

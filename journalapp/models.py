@@ -62,7 +62,7 @@ class PageImage(models.Model):
 
 # Temporary Journal Page model
 class TemporaryJournalPage(models.Model):
-	guid = models.CharField(max_length = 30)
+	guid = models.CharField(max_length = 50)
 	pageimage = models.OneToOneField(PageImage)
 	journal = models.OneToOneField(Journal)
 

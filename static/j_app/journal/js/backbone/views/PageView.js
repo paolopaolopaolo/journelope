@@ -354,8 +354,6 @@ var PageView = Backbone.View.extend({
 		this.parent = attrs['parent'];
 		this.current_journal = attrs['jid'];
 
-		this._saveImage = _.debounce(this._saveImage, 5000);
-
 		this.current_idx = 0;
 		this.collection = new Pages([], {jid: this.current_journal});
 		this.images = new Imgs([], {jid: this.current_journal});
