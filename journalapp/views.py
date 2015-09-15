@@ -62,6 +62,11 @@ class LandingPageView(JournelopeView):
 			return redirect('JournalPage')
 		return render(request, 'j_app/landing_page/base.html', self.context)
 
+	def post(self, request, *args, **kwargs):
+		post_data = request.POST
+		pdb.set_trace()
+		return redirect('UAuthPage')
+
 class UserAuthenticationView(JournelopeView):
 	
 	def _validate_and_use_form(self, form, request):

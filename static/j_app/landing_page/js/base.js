@@ -1,5 +1,15 @@
 var LandingPage = function () {
 
+  this._generateGUID = function () {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+                 .toString(16)
+                 .substring(1);
+      }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+  },
+
   // @desc: Runs $.fn.imgTxtHybrid() on Textbox
   // @params: None
   // @returns: None
@@ -8,14 +18,26 @@ var LandingPage = function () {
     this.$text_box.empty();
   };
 
-
-  // @desc: Saves what is in text_box to local storage
+  // @desc: Sets a cookie 'j_app_guid' that will be saved in database along with data
   // @params: None
   // @returns: None
   this._saveToLocalStorage = function () {
-    window.localStorage.setItem('demo-entry-text', this.$text_box.text());
-    window.localStorage.setItem('demo-entry-img', JSON.stringify(this.$text_box.imgSrc()));
-    location.href = '/uauth';
+    var guid, $text_input, $img_input;
+    guid = this._generateGUID();
+
+    // Set cooke on front-end
+    $.cookie('j_app_guid', guid);
+
+    $text_input = $('<input />').attr('type', 'hidden')
+                                .attr('name', 'text')
+                                .attr('value', this.$text_box.text());
+    $img_input = $('<input />').attr('type', 'hidden')
+                               .attr('name', 'imgs')
+                               .attr('value', JSON.stringify(this.$text_box.imgSrc()));
+
+    // Append inputs to form
+    this.$form.append($text_input);
+    this.$form.append($img_input);
   };
 
   // @desc: Creates event bound to $send_button that
@@ -24,9 +46,11 @@ var LandingPage = function () {
   // @params: Event Object
   // @returns: None
   this._setSendBehavior = function () {
+
     this.$send_button.on('click', function (event) {
       event.preventDefault();
       this._saveToLocalStorage();
+      this.$form.submit();
     }.bind(this));
 
   };
@@ -35,6 +59,7 @@ var LandingPage = function () {
   // @params: None
   // @returns: None
   this._setEntities = function () {
+    this.$form = $('.landing-page-form');
     this.$send_button = $('.save-sample-text');
     this.$text_box = $('.sample-text-input');
   };
