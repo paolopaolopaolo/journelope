@@ -31,6 +31,7 @@ var LandingPage = function () {
     $guid = $('<input />').attr('type', 'hidden')
                           .attr('name', 'guid')
                           .attr('value', guid);
+    
     $text_input = $('<input />').attr('type', 'hidden')
                                 .attr('name', 'text')
                                 .attr('value', this.$text_box.text());
@@ -47,10 +48,9 @@ var LandingPage = function () {
   // @desc: Creates event bound to $send_button that
   //        submits the contents of $text_box to localStorage
   //        and then navigates over to user auth page
-  // @params: Event Object
+  // @params: None
   // @returns: None
   this._setSendBehavior = function () {
-
     this.$send_button.on('click', function (event) {
       event.preventDefault();
       this._saveToLocalStorage();

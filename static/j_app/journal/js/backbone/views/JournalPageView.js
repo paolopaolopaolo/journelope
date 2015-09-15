@@ -33,7 +33,6 @@ var JournalPageView = Backbone.View.extend({
 	// @returns: None
 	initialize: function (attrs) {
 		this.parent = attrs.parent;
-		$.removeCookie('j_app_guid');
 		this.JournalView = new JournalView({parent: this});
 	},	
 });

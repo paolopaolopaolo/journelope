@@ -63,10 +63,10 @@ var PageView = Backbone.View.extend({
 			this._deleteImage(_id);
 		}
 
-		if (this.pageUpdateTimeout) {
-			clearTimeout(this.pageUpdateTimeout);
+		if (this.imageUploadTimeout) {
+			clearTimeout(this.imageUploadTimeout);
 		}
-		this.pageUpdateTimeout = setTimeout(_.bind( function () {
+		this.imageUploadTimeout = setTimeout(_.bind( function () {
 			$save_status.show()
 						.html('<i class="fa fa-spinner fa-pulse"></i>&nbsp;Saving...');
 			target_image = this.$el.find('.editable-box').imgSrc();

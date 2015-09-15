@@ -177,8 +177,8 @@ class JournalPageView(JournelopeView):
 				target_journal.save()
 				target_temp.delete()
 				print "GET from Cookie: Success"
-			except Exception:
-				pass
+			except Exception, e:
+				print str(e)
 
 		journals = self.get_queryset(request)
 		serialized_journals = [JournalSerializer(journal).data for journal in journals]
