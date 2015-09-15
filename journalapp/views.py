@@ -176,6 +176,7 @@ class JournalPageView(JournelopeView):
 				target_journal.user = J_User.objects.get(user=request.user)
 				target_journal.save()
 				target_temp.delete()
+				print "GET from Cookie: Success"
 			except Exception:
 				pass
 
