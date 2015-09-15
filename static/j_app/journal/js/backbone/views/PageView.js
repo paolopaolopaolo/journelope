@@ -198,14 +198,17 @@ var PageView = Backbone.View.extend({
 	// @params: None
 	// @returns: None
 	_prevPage: function () {
-		this.current_idx--;
-		if (this.current_idx < 0 && this.collection.last()) {
-			this.current_idx = this.collection.length - 1;
-			this.model.set(this.collection.last().attributes);
-		} else {
-			this.model.set(this.collection.at(this.current_idx).attributes);
+		if (this.collection.last() || this.collection.at(this.current_idx)) {
+			this.current_idx--;
+			if (this.current_idx < 0 && this.collection.last()) {
+				this.current_idx = this.collection.length - 1;
+				this.model.set(this.collection.last().attributes);
+			} else {
+				this.model.set(this.collection.at(this.current_idx).attributes);
+			}
 		}
 	},
+		
 
 	// @desc: Next Page
 	// @params: None
@@ -363,7 +366,7 @@ var PageView = Backbone.View.extend({
 		this.listenTo(this.model, 'change:id', this.render);
 		this.listenTo(this.collection, 'add', this._newPage);
 		this.listenTo(this.collection, 'reset', this._setFirstModel);
-		// this.listenTo(this.collection, 'remove', this._prevPage);
+		this.listenTo(this.collection, 'remove', this._prevPage);
 		this.listenTo(this.parent, 'getJournalPage', this._resetCollection);
 		this.listenTo(this.images, 'add', this._renderImages);
 
