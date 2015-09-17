@@ -1,6 +1,9 @@
 {% extends "j_app/shared/base.html" %}
 {% load compress %}
-{% load static from staticfiles }
+
+{% block custom_css %}
+<link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.4.0/animate.min.css"/>
+{% endblock %}
 
 {% block custom_less %}
   {% compress css inline %}
@@ -12,16 +15,55 @@
 {% endblock %}
 
 {% block main_content %}
-<div class="panel panel-1">
+
+{% load static from staticfiles %}
+
+<div class="mainpanel panel-1">
   <div class="container">
-    <h1 class="header-text">Write Your Feelings</h1>
-    <form class="landing-page-form" action="/" method="POST">
+    <h1 class="header-text row">Write Your Feelings</h1>
+    <form class="landing-page-form row" action="/" method="POST">
       {% csrf_token %}
       <div class="col-xs-12 sample-text-input" data-ph="Drag and drop images from your folders or type out your feelings!"></div>
       <button class="col-xs-8 col-xs-offset-2 btn-default btn save-sample-text">SAVE</button>
     </form>
   </div>
 </div>
+<div class="mainpanel panel-2">
+  <div class="container">
+    <h1 class="header-text">What is Journelope?</h1>
+    <div class="subpanel-wrapper col-xs-12 col-sm-6 col-md-4"> 
+      <div class="panel subpanel wow bounceInLeft" data-wow-delay="0.5s">
+        <h3>A simple diary application</h3>
+        <div class="lp-image-wrapper">
+          <img src="{% static 'j_app/landing_page/img/pixel_journal.svg' %}"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="subpanel-wrapper col-xs-12 col-sm-6 col-md-4"> 
+      <div class="panel subpanel wow bounceIn"  data-wow-delay="1.25s">
+        <h3>where you can post images</h3>
+        <div class="lp-image-wrapper">
+          <img src="{% static 'j_app/landing_page/img/pixel_photos_sized.svg' %}"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="subpanel-wrapper col-xs-12 col-sm-12 col-md-4"> 
+      <div class="panel subpanel wow bounceInRight"  data-wow-delay="2s">
+        <h3>and dream!</h3>
+        <div class="lp-image-wrapper">
+          <img src="{% static 'j_app/landing_page/img/ben_dreaming.svg' %}"/>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block custom_non_compress_js %}
+  <script src="//cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
 {% endblock %}
 
 {% block custom_js %}
@@ -31,4 +73,5 @@
   <script src="{{STATIC_URL}}j_app/landing_page/js/base.js"></script>
   <!--           -->
   {% endcompress %}
+
 {% endblock %}

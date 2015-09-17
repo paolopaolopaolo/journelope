@@ -1,5 +1,8 @@
 var LandingPage = function () {
 
+  // @desc: Create GUID (thanks, StackOverflow)
+  // @params: None
+  // @void: String
   this._generateGUID = function () {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -56,7 +59,6 @@ var LandingPage = function () {
       this._saveToLocalStorage();
       this.$form.submit();
     }.bind(this));
-
   };
 
   // @desc: Sets jQuery objects in the page
@@ -100,6 +102,13 @@ var LandingPage = function () {
     }
   };
 
+  // @desc: Initializes WOW reveal stuff
+  // @params: None
+  // @returns: None
+  this._initializeWOWJS = function () {
+    new WOW().init();
+  };
+
   // @desc: Initializes JS portion of Landing Page 
   // @params: None
   // @returns: None
@@ -108,6 +117,7 @@ var LandingPage = function () {
     this._imtifyTextBox();
     this._presetTextbox();
     this._setSendBehavior();
+    this._initializeWOWJS();
   };
 };
 
