@@ -25,7 +25,7 @@ except ImportError:
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-LOGIN_URL = "/"
+LOGIN_URL = "/uauth"
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, "templates"),)
 
 STATICFILES_DIRS = (
