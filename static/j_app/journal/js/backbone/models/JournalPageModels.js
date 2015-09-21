@@ -25,6 +25,10 @@ var Page = JournalPageModel.extend({
 
 var Img = JournalPageModel.extend({
 	urlRoot: '/page/',
+	destroy: function (attrs, opts) {
+		this.urlRoot = '/ji/';
+		return Backbone.Model.prototype.destroy.apply(this, arguments);
+	},
 	save: function (attrs, opts) {
 		this.urlRoot = '/ji/';
 		return Backbone.Model.prototype.save.apply(this, arguments);
