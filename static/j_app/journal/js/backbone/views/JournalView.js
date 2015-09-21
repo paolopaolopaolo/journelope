@@ -105,7 +105,7 @@ var JournalView = Backbone.View.extend({
 		this.collection = new Journals(JOURNALS);
 
 		if (this.collection.length > 0) {
-			jid1 = this.collection.models[0].attributes['id'];
+			jid1 = this.collection.last().attributes['id'];
 		} else {
 			jid1 = undefined;
 		}
