@@ -294,21 +294,8 @@ var PageView = Backbone.View.extend({
 		this.current_idx = 0;
 		
 		this.collection.fetch().done(_.bind(function () {
-			this.model.set(this.collection.first().attributes);
-			this.images.fetch({remove: true}).done(_.bind(function () {
-				if (this.demo_entry) {
-			
-					new_images = JSON.parse(this.demo_entry.images);
-					new_images = _.each(new_images, _.bind(function (img) {
-											img.page = this.model.attributes;
-											img = this._processTargetImage(img, true);
-											img.imageFile = "data:image/png;base64," + img.imageFile;
-											return img;
-										}, this));
-					this._reRenderText();
-					// this.images.add(new_images);		
-				}
-			}, this));
+			this.model.set(this.collection.last().attributes);
+			this.images.fetch({remove: true});
 		}, this));
 	},
 
@@ -343,13 +330,6 @@ var PageView = Backbone.View.extend({
 		this.$el.find('.page-view').empty();
 	},
 
-	_reRenderText: function () {	
-		this.$el.find('.editable-box')
-				.append(this.demo_entry.text);
-		this.demo_entry = undefined;
-		
-	},
-
 	// @desc: Initialize Page View
 	// @params: JS Object (attrs)
 	// @returns: None
@@ -370,9 +350,6 @@ var PageView = Backbone.View.extend({
 		this.listenTo(this.parent, 'getJournalPage', this._resetCollection);
 		this.listenTo(this.images, 'add', this._renderImages);
 
-
-		if (!this.demo_entry && this.current_journal) {
-			this.parent.trigger('getJournalPage', {id: this.current_journal});
-		}
+		this.parent.trigger('getJournalPage', {id: this.current_journal});
 	},
 });
