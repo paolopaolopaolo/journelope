@@ -5,6 +5,7 @@ var PageView = Backbone.View.extend({
 	inJournalEditMode: false,
 
 	current_idx: 0,
+
 	events: {
 		'click .prev-page': '_prevPage',
 		'click .next-page': '_nextPage',
@@ -29,7 +30,7 @@ var PageView = Backbone.View.extend({
 				   });
 	},
 
-	// @desc: Controller Logic for saving Images
+	// @desc: Controller Logic for Saving Images
 	// @params: JS Object
 	// @returns: JS Object
 	_processTargetImage: function (image, keepId) {
@@ -151,7 +152,7 @@ var PageView = Backbone.View.extend({
 		this.inJournalEditMode = !this.inJournalEditMode;
 	},
 
-	// @desc: Save PageText on mouseup
+	// @desc: Save PageText on keyup
 	// @params: Event Object
 	// @returns: None
 	_savePageText: function (event) {
@@ -167,11 +168,7 @@ var PageView = Backbone.View.extend({
 		this.pageUpdateTimeout = setTimeout(_.bind(function () {
 			$save_status.show()
 						.html('<i class="fa fa-spinner fa-pulse"></i>&nbsp;Saving...');
-			if (this.model.isNew()) {
-				target_model = this.collection.last();
-			} else {
-				target_model = this.collection.get(_id);
-			}
+			target_model = (this.collection.get(_id) || this.collection.last());
 			target_model.save({text: js_string})
 					  	.done(_.bind(function (response) {
 					  		target_model.set({id: response['id']});
@@ -300,11 +297,17 @@ var PageView = Backbone.View.extend({
 	},
 
 	// @desc: Sets the view model to the last model in the collection
-	// @params: Backbone Model, Backbone Collection
+	// @params: None
 	// @returns: None
-	_newPage: function (model, collection) {
+	_newPage: function () {
 		this.current_idx = this.collection.length - 1;
-		this.model.set(this.collection.last().attributes);
+		this.model.save(this.collection.last().attributes)
+				  .done(_.bind(function (response) {
+				  		if (!this.model.attributes.id) {
+				  			this.model.set('id', response.id);
+				  		}
+				  }, this));
+
 	},
 
 	// @desc: Sets the view model to the last model in the collection
@@ -320,7 +323,6 @@ var PageView = Backbone.View.extend({
 				text: ''
 			};
 		this.collection.add(new Page(newpage_attrs));
-		this.current_idx = this.collection.length - 1;
 	},
 
 	// @desc: Clear Page View
