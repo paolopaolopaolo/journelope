@@ -72,7 +72,13 @@ class LandingPageView(JournelopeView):
 		guid = request.POST['guid']
 		text = request.POST['text']
 
-		new_journal = Journal(user=None, textFilename=text[0:7])
+		new_journal = Journal(
+						user=None,
+						textFilename="".join((
+							"Untitled_'",
+							text[:15],
+							"...'"))
+					)
 		new_journal.save()
 
 		new_page = Page(journal=new_journal, text=text)
