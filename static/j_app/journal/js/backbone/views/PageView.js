@@ -91,7 +91,7 @@ var PageView = Backbone.View.extend({
 						  					.fadeOut(3000);
 							}, this));
 			}
-		}, this), 2500);
+		}, this), 500);
 	},
 
 	// @desc: Delete the page
