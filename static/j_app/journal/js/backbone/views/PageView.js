@@ -182,30 +182,28 @@ var PageView = Backbone.View.extend({
 	// @params: Integer or String
 	// @returns: None
 	_resetCollection: function (JournalObject) {
-		if (JournalObject.localStore) {
-			this.demo_entry = JournalObject.localStore;
-			localStorage.clear();
-		}
 		this.current_journal = JournalObject.id;
-		this.current_idx = 0;
 		this.collection.reset();
 	},
 
 	// @desc: Cycle leftwards thru page
-	// @params: None
-	// @returns: None
-	_prevPage: function () {
-		if (this.collection.last() || this.collection.at(this.current_idx)) {
-			this.current_idx--;
-			if (this.current_idx < 0 && this.collection.last()) {
-				this.current_idx = this.collection.length - 1;
-				this.model.set(this.collection.last().attributes);
-			} else {
-				this.model.set(this.collection.at(this.current_idx).attributes);
+	// @params: (Backbone Model OR Event Object), (Backbone Collection or None)
+	// @returns: None OR Boolean
+	_prevPage: function (model, collection) {
+		if (collection) {
+			if (model.attributes.id !== this.model.attributes.id) {
+				return False
 			}
+		} 
+
+		this.current_idx--;
+		if (this.current_idx < 0 && this.collection.last()) {
+			this.current_idx = this.collection.length - 1;
+			this.model.set(this.collection.last().attributes);
+		} else {
+			this.model.set(this.collection.at(this.current_idx).attributes);
 		}
 	},
-		
 
 	// @desc: Next Page
 	// @params: None
@@ -281,17 +279,19 @@ var PageView = Backbone.View.extend({
 	},	
 
 	// @desc: Sets the view model to the first Page in the Journal
-	// @params: None
+	// @params: Backbone Collection
 	// @returns: None
-	_setFirstModel: function () {
+	_setFirstModel: function (collection) {
 		var destined_model, new_images;
+
 		this.collection.jid = this.current_journal;
 		this.images.jid = this.current_journal;
 
 		this.current_idx = 0;
 		
-		this.collection.fetch().done(_.bind(function () {
+		this.collection.fetch().done(_.bind(function (response) {
 			this.model.set(this.collection.last().attributes);
+	  		this.listenTo(this.collection, 'add', this._newPage);
 			this.images.fetch({remove: true});
 		}, this));
 	},
@@ -343,15 +343,15 @@ var PageView = Backbone.View.extend({
 		this.collection = new Pages([], {jid: this.current_journal});
 		this.images = new Imgs([], {jid: this.current_journal});
 		this.model = new Page();
+		
+		this.listenTo(this.parent, 'getJournalPage', this._resetCollection);
+		this.listenTo(this.collection, 'reset', this._setFirstModel);
+		this.parent.trigger('getJournalPage', {id: this.current_journal});
 
 		this.listenTo(this.parent, 'clearPageView', this._clearPageView);
 		this.listenTo(this.model, 'change:id', this.render);
-		this.listenTo(this.collection, 'add', this._newPage);
-		this.listenTo(this.collection, 'reset', this._setFirstModel);
 		this.listenTo(this.collection, 'remove', this._prevPage);
-		this.listenTo(this.parent, 'getJournalPage', this._resetCollection);
 		this.listenTo(this.images, 'add', this._renderImages);
 
-		this.parent.trigger('getJournalPage', {id: this.current_journal});
 	},
 });
