@@ -287,13 +287,13 @@ var PageView = Backbone.View.extend({
 		this.collection.jid = this.current_journal;
 		this.images.jid = this.current_journal;
 
-		this.current_idx = 0;
-		
 		this.collection.fetch().done(_.bind(function (response) {
+			this.current_idx = this.collection.length - 1;
 			this.model.set(this.collection.last().attributes);
 	  		this.listenTo(this.collection, 'add', this._newPage);
 			this.images.fetch({remove: true});
 		}, this));
+
 	},
 
 	// @desc: Sets the view model to the last model in the collection
