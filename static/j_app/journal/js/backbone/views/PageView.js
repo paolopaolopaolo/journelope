@@ -287,6 +287,7 @@ var PageView = Backbone.View.extend({
 
 		this.collection.jid = this.current_journal;
 		this.images.jid = this.current_journal;
+		this.stopListening(this.collection, 'add');
 
 		this.collection.fetch().done(_.bind(function (response) {
 			this.current_idx = this.collection.length - 1;
@@ -345,6 +346,8 @@ var PageView = Backbone.View.extend({
 		this.collection = new Pages([], {jid: this.current_journal});
 		this.images = new Imgs([], {jid: this.current_journal});
 		this.model = new Page();
+
+		this._addPage = _.debounce(this._addPage, 1000);
 		
 		this.listenTo(this.parent, 'getJournalPage', this._resetCollection);
 		this.listenTo(this.collection, 'reset', this._setFirstModel);
