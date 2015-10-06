@@ -168,6 +168,7 @@ var PageView = Backbone.View.extend({
 		this.pageUpdateTimeout = setTimeout(_.bind(function () {
 			$save_status.show()
 						.html('<i class="fa fa-spinner fa-pulse"></i>&nbsp;Saving...');
+
 			target_model = (this.collection.get(_id) || this.collection.last());
 			target_model.save({text: js_string})
 					  	.done(_.bind(function (response) {
@@ -192,7 +193,7 @@ var PageView = Backbone.View.extend({
 	_prevPage: function (model, collection) {
 		if (collection) {
 			if (model.attributes.id !== this.model.attributes.id) {
-				return False
+				return false;
 			}
 		} 
 
@@ -304,7 +305,8 @@ var PageView = Backbone.View.extend({
 		this.model.save(this.collection.last().attributes)
 				  .done(_.bind(function (response) {
 				  		if (!this.model.attributes.id) {
-				  			this.model.set('id', response.id);
+				  			this.model.set('id', response.id, {silent: true});
+				  			this.collection.last().set('id', response.id, {silent: true});
 				  		}
 				  }, this));
 
