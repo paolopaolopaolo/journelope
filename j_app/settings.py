@@ -79,6 +79,7 @@ else:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    ADMINS = (('Dean', 'dpaolomercado@gmail.com'),)
 
 
 # Static files (CSS, JavaScript, Images)
