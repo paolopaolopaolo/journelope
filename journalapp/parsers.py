@@ -29,7 +29,7 @@ class JournalImageParser(BaseParser):
 	def _handle_images(self, base64str):
 		size = 0
 		if re.search(r'http', base64str) is not None:
-			file_item = cStringIO.StringIO(requests.get(base64str, verify=True).content)
+			file_item = cStringIO.StringIO(requests.get(base64str, verify=False).content)
 		else:
 			file_item = cStringIO.StringIO(base64.b64decode(base64str))
 		
