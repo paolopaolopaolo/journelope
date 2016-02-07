@@ -1,8 +1,8 @@
 from rest_framework.parsers import BaseParser
-import json, pdb, base64, cStringIO, re, urllib, random
+import json, pdb, base64, cStringIO, re, random
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image as PImage
-
+import requests
 
 from journalapp.models import *
 # Custom Parser(s)
@@ -29,7 +29,7 @@ class JournalImageParser(BaseParser):
 	def _handle_images(self, base64str):
 		size = 0
 		if re.search(r'http', base64str) is not None:
-			file_item = cStringIO.StringIO(urllib.urlopen(base64str).read())
+			file_item = cStringIO.StringIO(requests.get(base64str, verify=True).content)
 		else:
 			file_item = cStringIO.StringIO(base64.b64decode(base64str))
 		
